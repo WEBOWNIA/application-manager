@@ -1,8 +1,8 @@
 package net.webownia.applicationmgr;
 
-import net.webownia.applicationmgr.data.dao.ApplicationFormDAO;
 import net.webownia.applicationmgr.data.model.ApplicationForm;
 import net.webownia.applicationmgr.data.repository.ApplicationFormRepository;
+import net.webownia.applicationmgr.service.ApplicationFormService;
 import net.webownia.applicationmgr.shared.enums.ApplicationStage;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,20 +25,24 @@ public class ApplicationTests {
     private int port;
 
     @Autowired
-    private ApplicationFormDAO applicationFormDAO;
+    private ApplicationFormService applicationFormService;
 
     @Autowired
     private ApplicationFormRepository applicationFormRepository;
 
     @Test
     public void contextLoads() throws Exception {
-        applicationFormDAO.createNew("note1", "wersja 0");
-        applicationFormDAO.createNew("note2", "wersja 0");
-        applicationFormDAO.createNew("note3", "wersja 0");
-        applicationFormDAO.createNew("note4", "wersja 0");
-
-        ApplicationForm applicationForm = applicationFormRepository.findById(2l);
-        applicationFormDAO.changeStage(applicationForm.getId(), ApplicationStage.ACCEPTED);
+        applicationFormService.create("note1", "wersja 0");
+        applicationFormService.create("note2", "wersja 0");
+        applicationFormService.create("note3", "wersja 0");
+        applicationFormService.create("note4", "wersja 0");
+        applicationFormService.create("note5", "wersja 0");
+        applicationFormService.create("note6", "wersja 0");
+        applicationFormService.create("note7", "wersja 0");
+        applicationFormService.create("note8", "wersja 0");
+        applicationFormService.create("note9", "wersja 0");
+        applicationFormService.create("note10", "wersja 0");
+        applicationFormService.create("note11", "wersja 0");
 
         for (ApplicationForm form : applicationFormRepository.findAll()) {
             System.out.println(form);

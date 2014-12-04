@@ -3,8 +3,55 @@
 <head>
     <title>Getting Started: Serving Web Content</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"/>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.1.min.js"/>
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"/>
 </head>
 <body>
-<p th:text="'Hello, ' + ${name} + '!'" />
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">Static header</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="#">Home</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container" style="margin-top: 3%">
+        <div class="hero-unit">
+            <h1>Test</h1>
+            <p>
+                Welcome to the Spring MVC Quickstart application!
+                Get started quickly by signing up.
+            </p>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Version</th>
+                        <th>Name</th>
+                        <th>Stage</th>
+                        <th>From date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="item : ${page.getContent()}">
+                        <td th:text="${item.id}"/>
+                        <td th:text="${item.version}"/>
+                        <td th:text="${item.name}"/>
+                        <td th:text="${item.stage}"/>
+                        <td th:text="${item.fromDate}"/>
+                    </tr>
+                </tbody>
+            </table>
+            <div th:include="fragments/paginationbar"/>
+        </div>
+        <div th:replace="fragments/footer :: footer">&copy; 2013 The Static Templates</div>
+    </div>
 </body>
 </html>

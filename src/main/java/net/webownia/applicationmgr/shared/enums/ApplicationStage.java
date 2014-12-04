@@ -14,4 +14,9 @@ public enum ApplicationStage {
     PUBLISHED;
 
     public static final EnumSet<ApplicationStage> stagesForChangeContent = EnumSet.of(CREATED, VERIFIED);
+    public static final EnumSet<ApplicationStage> allStages = EnumSet.of(CREATED, DELETED, VERIFIED, REJECTED, ACCEPTED, PUBLISHED);
+
+    public static ApplicationStage getByName(String name) {
+        return ApplicationStage.valueOf(name);
+    }
 }

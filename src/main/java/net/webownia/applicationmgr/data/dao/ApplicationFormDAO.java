@@ -11,12 +11,9 @@ public interface ApplicationFormDAO {
 
     void createNew(String name, String content);
 
-    @Transactional
-    void changeContent(Long id, String newContent) throws Exception;
+    void changeContent(long id, String newContent) throws Exception;
 
-    @Transactional
-    void deleteOrReject(Long id, String cause, ApplicationStage actualStage) throws Exception;
+    void deleteOrReject(long id, String cause, ApplicationStage actualStage) throws Exception;
 
-    @Transactional
-    void changeStage(Long id, ApplicationStage actualStage) throws Exception;
+    void changeStage(long id, ApplicationStage actualStage) throws Exception;
 }

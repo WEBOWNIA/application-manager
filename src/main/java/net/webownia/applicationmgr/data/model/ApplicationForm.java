@@ -3,6 +3,7 @@ package net.webownia.applicationmgr.data.model;
 import net.webownia.applicationmgr.shared.enums.ApplicationStage;
 import org.hibernate.annotations.Type;
 import org.joda.time.LocalDateTime;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -12,6 +13,7 @@ import javax.validation.constraints.NotNull;
  * Created by abarczewski on 2014-12-03.
  */
 @Entity
+@EnableJpaAuditing
 public class ApplicationForm {
 
     @Id
