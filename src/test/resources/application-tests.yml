@@ -2,8 +2,7 @@ spring:
   profiles: tests
   datasource:
     driverClassName: org.h2.Driver
-    url: jdbc:h2:mem:test;MODE=PostgreSQL
-    schema: classpath:/schema.sql
+    url: jdbc:h2:mem:test;MODE=PostgreSQL;DB_CLOSE_ON_EXIT=FALSE
 server:
   address: 127.0.0.1
   port: 0

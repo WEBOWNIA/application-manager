@@ -3,26 +3,26 @@ package net.webownia.applicationmgr;
 import net.webownia.applicationmgr.data.model.ApplicationForm;
 import net.webownia.applicationmgr.data.repository.ApplicationFormRepository;
 import net.webownia.applicationmgr.service.ApplicationFormService;
-import net.webownia.applicationmgr.shared.enums.ApplicationStage;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+/**
+ * Created by Adam Barczewski on 2014-12-04.
+ */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = ApplicationTestConfiguration.class)
+@SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration
 @IntegrationTest(value = "spring.profiles.active=tests")
 @DirtiesContext
+@Ignore
 public class ApplicationTests {
-
-    @Value("${local.server.port}")
-    private int port;
 
     @Autowired
     private ApplicationFormService applicationFormService;
@@ -43,8 +43,28 @@ public class ApplicationTests {
         applicationFormService.create("note9", "wersja 0");
         applicationFormService.create("note10", "wersja 0");
         applicationFormService.create("note11", "wersja 0");
+        applicationFormService.create("note11", "wersja 0");
+        applicationFormService.create("note11", "wersja 0");
+        applicationFormService.create("note11", "wersja 0");
+        applicationFormService.create("note11", "wersja 0");
+        applicationFormService.create("note11", "wersja 0");
+        applicationFormService.create("note11", "wersja 0");
+        applicationFormService.create("note11", "wersja 0");
+        applicationFormService.create("note11", "wersja 0");
+        applicationFormService.create("note11", "wersja 0");
+        applicationFormService.create("note11", "wersja 0");
+        applicationFormService.create("note11", "wersja 0");
+        applicationFormService.create("note11", "wersja 0");
+        applicationFormService.create("note11", "wersja 0");
+
+
+        long i = 0;
 
         for (ApplicationForm form : applicationFormRepository.findAll()) {
+            if ((i / 5) > 0) {
+                applicationFormService.delete(i, "bo tak");
+            }
+            i = form.getId();
             System.out.println(form);
         }
     }

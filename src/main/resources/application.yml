@@ -6,3 +6,6 @@ spring:
     password: postgres
     driverClassName: org.postgresql.Driver
     schema: public
+  jpa:
+    hibernate:
+      ddl-auto: update

@@ -1,0 +1,98 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<div th:fragment='paginationTable'>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h2>Test</h2>
+
+            <p>
+                Welcome to the Spring MVC Quickstart application!
+                Get started quickly by signing up.
+            </p>
+
+            <label>Filtry</label>
+
+            <form class="form-inline" role="form">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon">By name</div>
+                        <input type="text" class="form-control" id="nameFilter" placeholder="Name..."/>
+                    </div>
+
+                    <button type="button" class="btn btn-default">
+                        <span class="glyphicon glyphicon-eye-close" aria-hidden="true"/> Created
+                    </button>
+
+                    <button type="button" class="btn btn-info">
+                        <span class="glyphicon glyphicon-eye-close" aria-hidden="true"/> Verified
+                    </button>
+
+                    <button type="button" class="btn btn-primary">
+                        <span class="glyphicon glyphicon-eye-open" aria-hidden="true"/> Accepted
+                    </button>
+
+                    <button type="button" class="btn btn-success">
+                        <span class="glyphicon glyphicon-eye-open" aria-hidden="true"/> Published
+                    </button>
+
+                    <button type="button" class="btn btn-warning">
+                        <span class="glyphicon glyphicon-eye-open" aria-hidden="true"/> Rejected
+                    </button>
+
+                    <button type="button" class="btn btn-danger">
+                        <span class="glyphicon glyphicon-eye-open" aria-hidden="true"/> Deleted
+                    </button>
+                </div>
+            </form>
+        </div>
+        <table th:if="${total > 0}" class="table table-hover table-bordered">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Content</th>
+                <th class="col-md-2">Create date</th>
+                <th class="col-md-2">Last modified date</th>
+                <th class="col-md-1">Status</th>
+                <th class="col-md-1"/>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${page.getContent()}">
+                <td th:text="${item.name}" style="vertical-align: super"/>
+                <td th:text="${item.content}" style="vertical-align: super"/>
+                <td th:text="${item.createdDate}" style="vertical-align: super"/>
+                <td th:text="${item.lastModifiedDate}" style="vertical-align: super"/>
+                <td th:text="${item.status}" style="vertical-align: super"/>
+                <td style="vertical-align: super">
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                                aria-expanded="false">
+                            Actions
+                            <span class="caret"/>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#">Preview</a></li>
+                            <li><a href="#">Changes</a></li>
+                            <li><a href="#">Delete</a></li>
+                            <li><a href="#">Verify</a></li>
+                            <li><a href="#">Reject</a></li>
+                            <li><a href="#">Accept</a></li>
+                            <li><a href="#">Publish</a></li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+            <tr/>
+            </tbody>
+        </table>
+        <h4 th:if="${total == 0}" style="margin-left: 1%">No records found.</h4>
+
+        <div th:if="${total > 10}" th:include="fragments/paginationbar"/>
+    </div>
+</div>
+</body>
+</html>
