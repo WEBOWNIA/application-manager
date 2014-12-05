@@ -17,7 +17,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = ApplicationTestConfiguration.class)
 @WebAppConfiguration
-@IntegrationTest("server.port=0")
+@IntegrationTest(value = "spring.profiles.active=tests")
 @DirtiesContext
 public class ApplicationTests {
 

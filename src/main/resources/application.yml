@@ -1,14 +1,6 @@
 spring:
   profiles: locale
   datasource:
-    driverClassName: org.h2.Driver
-    url: jdbc:h2:mem:test;MODE=PostgreSQL
-    schema: classpath:/schema.sql
-
----
-
-spring:
-  datasource:
     url: jdbc:postgresql://localhost:5432/applicationForms
     username: postgres
     password: postgres
