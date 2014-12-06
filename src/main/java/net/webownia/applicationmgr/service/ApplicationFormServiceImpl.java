@@ -1,3 +1,18 @@
+/*
+* Copyright 2008-2014 the original author or authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 package net.webownia.applicationmgr.service;
 
 import net.webownia.applicationmgr.data.model.ApplicationForm;
@@ -14,8 +29,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+
 /**
- * Created by abarczewski on 2014-12-04.
+ * Created by Adam Barczewski on 2014-12-04.
  */
 @Service
 public class ApplicationFormServiceImpl implements ApplicationFormService {
@@ -30,15 +47,11 @@ public class ApplicationFormServiceImpl implements ApplicationFormService {
 
     @Override
     public void create(String name, String content) throws ApplicationFormChangingStatusRuntimeException {
-        if (content == null || content.isEmpty() && name == null || name.isEmpty()) {
+        if ((content == null || content.isEmpty()) && (name == null || name.isEmpty())) {
             throw new ApplicationFormChangingStatusRuntimeException("Name and content are required.");
-        }
-
-        if (name == null || name.isEmpty()) {
+        } else if (name == null || name.isEmpty()) {
             throw new ApplicationFormChangingStatusRuntimeException("Name is required.");
-        }
-
-        if (content == null || content.isEmpty()) {
+        } else if (content == null || content.isEmpty()) {
             throw new ApplicationFormChangingStatusRuntimeException("Content is required.");
         }
 
@@ -47,40 +60,44 @@ public class ApplicationFormServiceImpl implements ApplicationFormService {
     }
 
     @Override
-    public void delete(long id, String cause) throws Exception {
+    public void delete(long id, String cause) throws ApplicationFormChangingStatusRuntimeException, ApplicationFormChangingStatusException {
         changeStatusAndAudit(id, ApplicationStatus.DELETED, cause);
     }
 
     @Override
-    public void verified(long id) throws Exception {
+    public void verified(long id) throws ApplicationFormChangingStatusRuntimeException, ApplicationFormChangingStatusException {
         changeStatusAndAudit(id, ApplicationStatus.VERIFIED, null);
     }
 
     @Override
-    public void reject(long id, String cause) throws Exception {
+    public void reject(long id, String cause) throws ApplicationFormChangingStatusRuntimeException, ApplicationFormChangingStatusException {
         changeStatusAndAudit(id, ApplicationStatus.REJECTED, cause);
     }
 
     @Override
-    public void accept(long id) throws Exception {
+    public void accept(long id) throws ApplicationFormChangingStatusRuntimeException, ApplicationFormChangingStatusException {
         changeStatusAndAudit(id, ApplicationStatus.ACCEPTED, null);
     }
 
     @Override
-    public void publish(long id) throws Exception {
+    public void publish(long id) throws ApplicationFormChangingStatusRuntimeException, ApplicationFormChangingStatusException {
         changeStatusAndAudit(id, ApplicationStatus.PUBLISHED, null);
     }
 
     @Override
-    public Page<ApplicationForm> findByNameOrStage(String name, ApplicationStatus status, Integer pageNumber) {
-        PageRequest request = new PageRequest(pageNumber - 1, PAGE_SIZE, Sort.Direction.ASC, "lastModifiedDate", "createdDate");
-        return repository.findByNameOrStatus(name, status, request);
-    }
-
-    @Override
-    public Page<ApplicationForm> findByName(String name, Integer pageNumber) {
-        PageRequest request = new PageRequest(pageNumber - 1, PAGE_SIZE, Sort.Direction.ASC, "lastModifiedDate", "createdDate");
-        return repository.findByName(name, request);
+    public Page<ApplicationForm> findByNameOrStatusIn(String name, Collection<String> collectionStatus, Integer pageNumber) throws ApplicationFormChangingStatusRuntimeException, ApplicationFormChangingStatusException {
+        if (name == null || name.isEmpty() || collectionStatus == null || collectionStatus.isEmpty()) {
+            return findAll(pageNumber);
+        }
+        try {
+            ApplicationStatus.enumSetForStatusCollection(collectionStatus);
+            PageRequest request = new PageRequest(pageNumber - 1, PAGE_SIZE, Sort.Direction.ASC, "lastModifiedDate", "createdDate");
+            return repository.findByNameOrStatusIn(name, collectionStatus, request);
+        } catch (IllegalArgumentException e) {
+            throw new ApplicationFormChangingStatusRuntimeException("Wrong status collections.", e.getCause());
+        } catch (Exception e) {
+            throw new ApplicationFormChangingStatusException("Unknown exception", e.getCause());
+        }
     }
 
     @Override
@@ -95,7 +112,7 @@ public class ApplicationFormServiceImpl implements ApplicationFormService {
         return auditRepository.findByApplicationFormId(applicationFormId, request);
     }
 
-    private void changeStatusAndAudit(long id, ApplicationStatus status, String cause) throws Exception {
+    private void changeStatusAndAudit(long id, ApplicationStatus status, String cause) throws ApplicationFormChangingStatusRuntimeException, ApplicationFormChangingStatusException {
         ApplicationForm applicationForm = repository.findById(id);
 
         ApplicationFormAudit applicationFormAudit = new ApplicationFormAudit();
@@ -121,7 +138,7 @@ public class ApplicationFormServiceImpl implements ApplicationFormService {
         } else if (status.equals(ApplicationStatus.PUBLISHED) && applicationForm.getStatus().equals(ApplicationStatus.ACCEPTED)) {
             applicationForm.setStatus(status);
         } else {
-            throw new ApplicationFormChangingStatusException("Nie można zmienić statusu wniosku.");
+            throw new ApplicationFormChangingStatusException("Can not changed status.");
         }
 
         // put on history

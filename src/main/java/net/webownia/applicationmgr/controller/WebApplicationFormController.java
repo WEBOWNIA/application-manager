@@ -1,6 +1,22 @@
+/*
+* Copyright 2008-2014 the original author or authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 package net.webownia.applicationmgr.controller;
 
 import net.webownia.applicationmgr.data.model.ApplicationForm;
+import net.webownia.applicationmgr.exception.ApplicationFormChangingStatusException;
 import net.webownia.applicationmgr.service.ApplicationFormService;
 import net.webownia.applicationmgr.shared.enums.ApplicationStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +31,8 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.io.IOException;
+import java.util.EnumSet;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -55,16 +73,15 @@ public class WebApplicationFormController extends WebMvcConfigurerAdapter {
     @RequestMapping(value = "/applications/{pageNumber}", method = RequestMethod.GET)
     public String applications(
             @RequestParam(value = "name", required = false) String name,
-            @RequestParam(value = "stage", required = false) String stage,
-            @PathVariable Integer pageNumber, Model model) {
+            @RequestParam(value = "statusCollection", required = false) List<String> collectionStatus,
+            @PathVariable Integer pageNumber, Model model) throws Exception {
 
         Page<ApplicationForm> page = null;
 
-        if (stage != null && !stage.isEmpty() && ApplicationStatus.allStages.contains(stage)) {
-            ApplicationStatus applicationStatus = ApplicationStatus.getByName(stage);
-            page = applicationFormService.findByNameOrStage(name, applicationStatus, pageNumber);
-        } else if (name != null && !name.isEmpty()) {
-            page = applicationFormService.findByName(name, pageNumber);
+        EnumSet<ApplicationStatus> applicationStatuses = ApplicationStatus.enumSetForStatusCollection(collectionStatus);
+
+        if (collectionStatus != null && !collectionStatus.isEmpty() && ApplicationStatus.allStatusCollection.containsAll(applicationStatuses)) {
+            page = applicationFormService.findByNameOrStatusIn(name, collectionStatus, pageNumber);
         } else {
             page = applicationFormService.findAll(pageNumber);
         }
@@ -78,6 +95,9 @@ public class WebApplicationFormController extends WebMvcConfigurerAdapter {
         model.addAttribute("endIndex", end);
         model.addAttribute("currentIndex", current);
         model.addAttribute("total", page.getTotalElements());
+
+        setAppNameAndVersionOnModel(model);
+
         return "index";
     }
 
