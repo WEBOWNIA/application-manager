@@ -16,7 +16,6 @@
 package net.webownia.applicationmgr.controller;
 
 import net.webownia.applicationmgr.data.model.ApplicationForm;
-import net.webownia.applicationmgr.exception.ApplicationFormChangingStatusException;
 import net.webownia.applicationmgr.service.ApplicationFormService;
 import net.webownia.applicationmgr.shared.enums.ApplicationStatus;
 import org.springframework.beans.factory.annotation.Autowired;
