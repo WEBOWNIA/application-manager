@@ -422,7 +422,7 @@ public class ApplicationFormServiceTest {
                 testee.delete(1, "Cause message...");
                 break;
             case VERIFY:
-                testee.verified(1);
+                testee.verify(1);
                 break;
             case ACCEPT:
                 testee.accept(1);
@@ -463,7 +463,7 @@ public class ApplicationFormServiceTest {
                 testee.delete(1, "Cause message...");
                 break;
             case VERIFY:
-                testee.verified(1);
+                testee.verify(1);
                 break;
             case ACCEPT:
                 testee.accept(1);

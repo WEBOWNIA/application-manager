@@ -36,7 +36,7 @@ public interface ApplicationFormService {
     void delete(long id, String cause) throws ApplicationFormChangingStatusRuntimeException, ApplicationFormChangingStatusException;
 
     @Transactional(Transactional.TxType.REQUIRED)
-    void verified(long id) throws ApplicationFormChangingStatusRuntimeException, ApplicationFormChangingStatusException;
+    void verify(long id) throws ApplicationFormChangingStatusRuntimeException, ApplicationFormChangingStatusException;
 
     @Transactional(Transactional.TxType.REQUIRED)
     void reject(long id, String cause) throws ApplicationFormChangingStatusRuntimeException, ApplicationFormChangingStatusException;
@@ -52,4 +52,6 @@ public interface ApplicationFormService {
     Page<ApplicationForm> findAll(Integer pageNumber);
 
     Page<ApplicationFormAudit> findByApplicationFormId(long applicationFormId, Integer pageNumber);
+
+    ApplicationForm findById(Long id);
 }

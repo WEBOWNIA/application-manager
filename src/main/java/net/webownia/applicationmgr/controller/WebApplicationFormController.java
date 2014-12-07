@@ -48,15 +48,18 @@ public class WebApplicationFormController extends WebMvcConfigurerAdapter {
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/").setViewName("index");
+        registry.addViewController("/new").setViewName("new");
+        registry.addViewController("/preview").setViewName("preview");
+        registry.addViewController("/edit").setViewName("edit");
+        registry.addViewController("/deleteOrReject").setViewName("deleteOrReject");
+        registry.addViewController("/history").setViewName("history");
     }
 
     @Autowired
     private ApplicationFormService applicationFormService;
 
-
     @RequestMapping(value = "/", method = RequestMethod.GET, headers = "Accept=application/json; charset=utf-8")
     public String applications(Model model) throws IOException, ApplicationFormChangingStatusException {
-
 
         if (statusesFilter == null) {
             statusesFilter = ApplicationStatus.statusCollectionForEnumSet(ApplicationStatus.allStatusCollection);
@@ -79,6 +82,22 @@ public class WebApplicationFormController extends WebMvcConfigurerAdapter {
         }
 
         nameFilter = filter.getNameFilter();
+
+        Page<ApplicationForm> page = applicationFormService.findByNameOrStatusIn(nameFilter, statusesFilter, pageNumber);
+
+        setModelForIndexPage(model, page);
+
+        setAppNameAndVersionOnModel(model);
+
+        return "index";
+    }
+
+    @RequestMapping(value = "/applications", method = RequestMethod.GET, headers = "Accept=application/json; charset=utf-8")
+    public String paging(@RequestParam(value = "page", required = false) Integer pageNumber, Model model) throws IOException, ApplicationFormChangingStatusException {
+
+        if (pageNumber == null) {
+            pageNumber = 1;
+        }
 
         Page<ApplicationForm> page = applicationFormService.findByNameOrStatusIn(nameFilter, statusesFilter, pageNumber);
 
@@ -121,6 +140,38 @@ public class WebApplicationFormController extends WebMvcConfigurerAdapter {
         return "index";
     }
 
+    @RequestMapping(value = "/application/new", method = RequestMethod.GET, headers = "Accept=application/json; charset=utf-8")
+    public String addNew(Model model) throws IOException {
+        setAppNameAndVersionOnModel(model);
+        return "new";
+    }
+
+    @RequestMapping(value = "/application/{id}/{method}", method = RequestMethod.GET, headers = "Accept=application/json; charset=utf-8")
+    public String changeStatus(@PathVariable Long id, @PathVariable String method, Model model) throws ApplicationFormChangingStatusException, IOException {
+        if ("verify".equals(method) && id != null) {
+            applicationFormService.verify(id);
+        } else if ("accept".equals(method) && id != null) {
+            applicationFormService.accept(id);
+        } else if ("publish".equals(method) && id != null) {
+            applicationFormService.publish(id);
+        } else if ("preview".equals(method) && id != null) {
+            return toView(id, model, "preview");
+        }else if ("edit".equals(method) && id != null) {
+            return toView(id, model, "edit");
+        }else if ("history".equals(method) && id != null) {
+            return toView(id, model, "history");
+        } else if (("delete".equals(method) || "reject".equals(method)) && id != null) {
+            return toView(id, model, "deleteOrReject");
+        }
+        return "redirect:/";
+    }
+
+    private String toView(Long id, Model model, String viewName) throws IOException {
+        model.addAttribute("appForm", applicationFormService.findById(id));
+        setAppNameAndVersionOnModel(model);
+        return viewName;
+    }
+
     private void setModelForIndexPage(Model model, Page<ApplicationForm> page) {
         if (page != null) {
             int current = page.getNumber() + 1;
@@ -137,6 +188,8 @@ public class WebApplicationFormController extends WebMvcConfigurerAdapter {
             model.addAttribute("currentIndex", 1);
         }
         model.addAttribute("statuses", statusesFilter);
+
+        model.addAttribute("pageWrapper", new PageWrapper<ApplicationForm>(page, "/applications"));
     }
 
     private void setAppNameAndVersionOnModel(Model model) throws IOException {

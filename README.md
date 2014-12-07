@@ -13,3 +13,4 @@ Management system for applications.
 * i18N
 * Validation
 * Member filter name value after submit form
+* Exception handling and presentation on views

@@ -29,7 +29,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -67,7 +66,7 @@ public class ApplicationFormServiceImpl implements ApplicationFormService {
     }
 
     @Override
-    public void verified(long id) throws ApplicationFormChangingStatusRuntimeException, ApplicationFormChangingStatusException {
+    public void verify(long id) throws ApplicationFormChangingStatusRuntimeException, ApplicationFormChangingStatusException {
         changeStatusAndAudit(id, ApplicationStatus.VERIFIED, null);
     }
 
@@ -124,6 +123,11 @@ public class ApplicationFormServiceImpl implements ApplicationFormService {
     public Page<ApplicationFormAudit> findByApplicationFormId(long applicationFormId, Integer pageNumber) {
         PageRequest request = new PageRequest(pageNumber - 1, PAGE_SIZE, Sort.Direction.ASC, "lastModifiedDate", "createdDate");
         return auditRepository.findByApplicationFormId(applicationFormId, request);
+    }
+
+    @Override
+    public ApplicationForm findById(Long id) {
+        return repository.findById(id);
     }
 
     private void changeStatusAndAudit(long id, ApplicationStatus status, String cause) throws ApplicationFormChangingStatusRuntimeException, ApplicationFormChangingStatusException {
