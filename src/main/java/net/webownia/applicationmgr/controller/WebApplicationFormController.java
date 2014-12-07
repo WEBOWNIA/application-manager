@@ -17,7 +17,6 @@ package net.webownia.applicationmgr.controller;
 
 import net.webownia.applicationmgr.data.model.ApplicationForm;
 import net.webownia.applicationmgr.service.ApplicationFormService;
-import net.webownia.applicationmgr.shared.enums.ApplicationStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -30,7 +29,6 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.io.IOException;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Properties;
 
@@ -42,15 +40,15 @@ public class WebApplicationFormController extends WebMvcConfigurerAdapter {
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/results").setViewName("results");
+        registry.addViewController("/").setViewName("index");
     }
 
     @Autowired
     private ApplicationFormService applicationFormService;
 
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String index(Model model) throws IOException {
+    @RequestMapping(value = "/", method = RequestMethod.GET, headers = "Accept=application/json; charset=utf-8")
+    public String applications(Model model) throws IOException {
 
         Page<ApplicationForm> page = applicationFormService.findAll(1);
 
@@ -69,21 +67,13 @@ public class WebApplicationFormController extends WebMvcConfigurerAdapter {
         return "index";
     }
 
-    @RequestMapping(value = "/applications/{pageNumber}", method = RequestMethod.GET)
+    @RequestMapping(value = "/applications/{pageNumber}", method = RequestMethod.GET, headers = "Accept=application/json; charset=utf-8")
     public String applications(
             @RequestParam(value = "name", required = false) String name,
-            @RequestParam(value = "statusCollection", required = false) List<String> collectionStatus,
+            @RequestParam(value = "statuses", required = false) List<String> statuses,
             @PathVariable Integer pageNumber, Model model) throws Exception {
 
-        Page<ApplicationForm> page = null;
-
-        EnumSet<ApplicationStatus> applicationStatuses = ApplicationStatus.enumSetForStatusCollection(collectionStatus);
-
-        if (collectionStatus != null && !collectionStatus.isEmpty() && ApplicationStatus.allStatusCollection.containsAll(applicationStatuses)) {
-            page = applicationFormService.findByNameOrStatusIn(name, collectionStatus, pageNumber);
-        } else {
-            page = applicationFormService.findAll(pageNumber);
-        }
+        Page<ApplicationForm> page = applicationFormService.findByNameOrStatusIn(name, statuses, pageNumber);
 
         int current = page.getNumber() + 1;
         int begin = Math.max(1, current - 5);

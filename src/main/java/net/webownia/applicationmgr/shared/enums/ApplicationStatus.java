@@ -36,17 +36,22 @@ public enum ApplicationStatus {
 
     public static Collection<String> statusCollectionForEnumSet(EnumSet<ApplicationStatus> enumSet) {
         Collection<String> statusCollection = new ArrayList<>(0);
-        for (ApplicationStatus status : enumSet) {
-            statusCollection.add(status.name());
+        if (enumSet != null && !enumSet.isEmpty()) {
+            for (ApplicationStatus status : enumSet) {
+                statusCollection.add(status.name());
+            }
         }
         return statusCollection;
     }
 
     public static EnumSet<ApplicationStatus> enumSetForStatusCollection(Collection<String> statusCollection) {
-        List<ApplicationStatus> enumList = new ArrayList<>(statusCollection.size());
-        for (String status : statusCollection) {
-            enumList.add(ApplicationStatus.valueOf(status));
+        List<ApplicationStatus> enumList = new ArrayList<>(0);
+        if (statusCollection != null && !statusCollection.isEmpty()) {
+            for (String status : statusCollection) {
+                enumList.add(ApplicationStatus.valueOf(status));
+            }
+            return EnumSet.copyOf(enumList);
         }
-        return EnumSet.copyOf(enumList);
+        return null;
     }
 }

@@ -16,11 +16,15 @@
 package net.webownia.applicationmgr;
 
 import com.jayway.restassured.RestAssured;
+import net.webownia.applicationmgr.service.ApplicationFormService;
 import org.apache.http.HttpStatus;
+import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -38,6 +42,7 @@ import static com.jayway.restassured.RestAssured.when;
 @WebAppConfiguration
 @ActiveProfiles("tests")
 @IntegrationTest
+@Ignore
 public class WebApplicationFormControllerTest {
 
     @Value("${spring.profiles.active}")
@@ -46,8 +51,16 @@ public class WebApplicationFormControllerTest {
     @Value("${local.server.port}")
     int port;
 
+    @Autowired
+    private ApplicationFormService applicationFormService;
+
+
     @Before
     public void setUp() {
+        for (int i = 1; i <= 25; i++) {
+            applicationFormService.create("note" + i, "content message");
+        }
+
         RestAssured.port = port;
     }
 
@@ -59,5 +72,20 @@ public class WebApplicationFormControllerTest {
     @Test
     public void shouldGetAllApplications() {
         when().get("/").then().statusCode(HttpStatus.SC_OK);
+    }
+
+    @Test
+    public void shouldGetApplicationsForStatusCollection() {
+        when().get("/applications/1?statuses=CREATED,DELETED").then().statusCode(HttpStatus.SC_OK);
+    }
+
+    @Test
+    public void shouldGetApplicationsForName() {
+        when().get("/applications/1?name=note23").then().statusCode(HttpStatus.SC_OK);
+    }
+
+    @Test
+    public void should500ForGetApplicationsByWrongStatus() {
+        when().get("/applications/1?statuses=CREATED,DELETE").then().statusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
     }
 }

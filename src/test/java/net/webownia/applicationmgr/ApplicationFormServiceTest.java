@@ -40,6 +40,7 @@ import org.springframework.data.domain.Sort;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.EnumSet;
 
 import static org.mockito.Mockito.*;
 
@@ -83,12 +84,40 @@ public class ApplicationFormServiceTest {
     @Test
     public void shouldThrowWhenCreateTestCases() throws Exception {
         shouldThrowRuntimeWithOutNameOrContent(null, null);
+    }
+
+    @Test
+    public void shouldThrowWhenCreateTestCases1() throws Exception {
         shouldThrowRuntimeWithOutNameOrContent("", "");
+    }
+
+    @Test
+    public void shouldThrowWhenCreateTestCases2() throws Exception {
         shouldThrowRuntimeWithOutNameOrContent(null, "");
+    }
+
+    @Test
+    public void shouldThrowWhenCreateTestCases3() throws Exception {
         shouldThrowRuntimeWithOutNameOrContent("", null);
+    }
+
+    @Test
+    public void shouldThrowWhenCreateTestCases4() throws Exception {
         shouldThrowRuntimeWithOutNameOrContent("xx", null);
+    }
+
+    @Test
+    public void shouldThrowWhenCreateTestCases5() throws Exception {
         shouldThrowRuntimeWithOutNameOrContent(null, "xx");
+    }
+
+    @Test
+    public void shouldThrowWhenCreateTestCases6() throws Exception {
         shouldThrowRuntimeWithOutNameOrContent("", "xx");
+    }
+
+    @Test
+    public void shouldThrowWhenCreateTestCases7() throws Exception {
         shouldThrowRuntimeWithOutNameOrContent("xx", "");
     }
 
@@ -100,9 +129,25 @@ public class ApplicationFormServiceTest {
     @Test
     public void shouldThrowWhenVerifyTestCases() throws Exception {
         shouldThrowForStatusAndAction(ApplicationStatus.VERIFIED, Action.VERIFY);
+    }
+
+    @Test
+    public void shouldThrowWhenVerifyTestCases1() throws Exception {
         shouldThrowForStatusAndAction(ApplicationStatus.DELETED, Action.VERIFY);
+    }
+
+    @Test
+    public void shouldThrowWhenVerifyTestCases2() throws Exception {
         shouldThrowForStatusAndAction(ApplicationStatus.REJECTED, Action.VERIFY);
+    }
+
+    @Test
+    public void shouldThrowWhenVerifyTestCases3() throws Exception {
         shouldThrowForStatusAndAction(ApplicationStatus.ACCEPTED, Action.VERIFY);
+    }
+
+    @Test
+    public void shouldThrowWhenVerifyTestCases4() throws Exception {
         shouldThrowForStatusAndAction(ApplicationStatus.PUBLISHED, Action.VERIFY);
     }
 
@@ -114,9 +159,25 @@ public class ApplicationFormServiceTest {
     @Test
     public void shouldThrowWhenDeleteTestCases() throws Exception {
         shouldThrowForStatusAndAction(ApplicationStatus.VERIFIED, Action.DELETE);
+    }
+
+    @Test
+    public void shouldThrowWhenDeleteTestCases1() throws Exception {
         shouldThrowForStatusAndAction(ApplicationStatus.REJECTED, Action.DELETE);
+    }
+
+    @Test
+    public void shouldThrowWhenDeleteTestCases2() throws Exception {
         shouldThrowForStatusAndAction(ApplicationStatus.ACCEPTED, Action.DELETE);
+    }
+
+    @Test
+    public void shouldThrowWhenDeleteTestCases3() throws Exception {
         shouldThrowForStatusAndAction(ApplicationStatus.PUBLISHED, Action.DELETE);
+    }
+
+    @Test
+    public void shouldThrowWhenDeleteTestCases4() throws Exception {
         shouldThrowRuntimeWithOutCause(ApplicationStatus.VERIFIED, Action.DELETE);
     }
 
@@ -128,9 +189,25 @@ public class ApplicationFormServiceTest {
     @Test
     public void shouldThrowWhenRejectTestCases() throws Exception {
         shouldThrowForStatusAndAction(ApplicationStatus.CREATED, Action.REJECT);
+    }
+
+    @Test
+    public void shouldThrowWhenRejectTestCases1() throws Exception {
         shouldThrowForStatusAndAction(ApplicationStatus.DELETED, Action.REJECT);
+    }
+
+    @Test
+    public void shouldThrowWhenRejectTestCases2() throws Exception {
         shouldThrowForStatusAndAction(ApplicationStatus.REJECTED, Action.REJECT);
+    }
+
+    @Test
+    public void shouldThrowWhenRejectTestCases3() throws Exception {
         shouldThrowForStatusAndAction(ApplicationStatus.PUBLISHED, Action.REJECT);
+    }
+
+    @Test
+    public void shouldThrowWhenRejectTestCases4() throws Exception {
         shouldThrowRuntimeWithOutCause(ApplicationStatus.CREATED, Action.REJECT);
     }
 
@@ -142,9 +219,25 @@ public class ApplicationFormServiceTest {
     @Test
     public void shouldThrowWhenAcceptTestCases() throws Exception {
         shouldThrowForStatusAndAction(ApplicationStatus.ACCEPTED, Action.ACCEPT);
+    }
+
+    @Test
+    public void shouldThrowWhenAcceptTestCases1() throws Exception {
         shouldThrowForStatusAndAction(ApplicationStatus.CREATED, Action.ACCEPT);
+    }
+
+    @Test
+    public void shouldThrowWhenAcceptTestCases2() throws Exception {
         shouldThrowForStatusAndAction(ApplicationStatus.DELETED, Action.ACCEPT);
+    }
+
+    @Test
+    public void shouldThrowWhenAcceptTestCases3() throws Exception {
         shouldThrowForStatusAndAction(ApplicationStatus.REJECTED, Action.ACCEPT);
+    }
+
+    @Test
+    public void shouldThrowWhenAcceptTestCases4() throws Exception {
         shouldThrowForStatusAndAction(ApplicationStatus.PUBLISHED, Action.ACCEPT);
     }
 
@@ -156,9 +249,25 @@ public class ApplicationFormServiceTest {
     @Test
     public void shouldThrowWhenPublishTestCases() throws Exception {
         shouldThrowForStatusAndAction(ApplicationStatus.PUBLISHED, Action.PUBLISH);
+    }
+
+    @Test
+    public void shouldThrowWhenPublishTestCases1() throws Exception {
         shouldThrowForStatusAndAction(ApplicationStatus.VERIFIED, Action.PUBLISH);
+    }
+
+    @Test
+    public void shouldThrowWhenPublishTestCases2() throws Exception {
         shouldThrowForStatusAndAction(ApplicationStatus.REJECTED, Action.PUBLISH);
+    }
+
+    @Test
+    public void shouldThrowWhenPublishTestCases3() throws Exception {
         shouldThrowForStatusAndAction(ApplicationStatus.DELETED, Action.PUBLISH);
+    }
+
+    @Test
+    public void shouldThrowWhenPublishTestCases4() throws Exception {
         shouldThrowForStatusAndAction(ApplicationStatus.CREATED, Action.PUBLISH);
     }
 
@@ -178,13 +287,45 @@ public class ApplicationFormServiceTest {
     @Test
     public void shouldFindApplicationTestCases() throws ApplicationFormChangingStatusException {
         shouldFindApplicationForFilter(null, null);
+    }
+
+    @Test
+    public void shouldFindApplicationTestCases1() throws ApplicationFormChangingStatusException {
         shouldFindApplicationForFilter("", null);
+    }
+
+    @Test
+    public void shouldFindApplicationTestCases2() throws ApplicationFormChangingStatusException {
         shouldFindApplicationForFilter("xxx", null);
+    }
+
+    @Test
+    public void shouldFindApplicationTestCases3() throws ApplicationFormChangingStatusException {
         shouldFindApplicationForFilter(null, new ArrayList<>(0));
+    }
+
+    @Test
+    public void shouldFindApplicationTestCases4() throws ApplicationFormChangingStatusException {
         shouldFindApplicationForFilter("", new ArrayList<>(0));
+    }
+
+    @Test
+    public void shouldFindApplicationTestCases5() throws ApplicationFormChangingStatusException {
         shouldFindApplicationForFilter("xxx", new ArrayList<>(0));
+    }
+
+    @Test
+    public void shouldFindApplicationTestCases6() throws ApplicationFormChangingStatusException {
         shouldFindApplicationForFilter(null, STATUS_COLLECTIONS);
+    }
+
+    @Test
+    public void shouldFindApplicationTestCases7() throws ApplicationFormChangingStatusException {
         shouldFindApplicationForFilter("", STATUS_COLLECTIONS);
+    }
+
+    @Test
+    public void shouldFindApplicationTestCases8() throws ApplicationFormChangingStatusException {
         shouldFindApplicationForFilter("xxx", STATUS_COLLECTIONS);
     }
 
@@ -222,11 +363,32 @@ public class ApplicationFormServiceTest {
      */
     private void shouldFindApplicationForFilter(String name, Collection<String> statusCollection) throws ApplicationFormChangingStatusException {
         //GIVEN
-        if (name == null || name.isEmpty() || statusCollection == null || statusCollection.isEmpty()) {
-            when(applicationFormRepository.findAll(REQUEST)).thenReturn(pageApplicationForms);
-        } else {
-            when(applicationFormRepository.findByNameOrStatusIn(name, statusCollection, REQUEST)).thenReturn(pageApplicationForms);
+        EnumSet applicationStatuses = ApplicationStatus.enumSetForStatusCollection(statusCollection);
+        boolean forStatus = false;
+        if (applicationStatuses != null && ApplicationStatus.allStatusCollection.containsAll(applicationStatuses)) {
+            forStatus = true;
         }
+        if (name != null && !name.isEmpty() && forStatus) {
+            //  for  shouldFindApplicationForFilter("xxx", STATUS_COLLECTIONS);
+            when(applicationFormRepository.findByNameOrStatusIn(name, statusCollection, REQUEST)).thenReturn(pageApplicationForms);
+        } else if ((name == null || name.isEmpty()) && (statusCollection == null || statusCollection.isEmpty())) {
+            //  for  shouldFindApplicationForFilter(null, null);
+            //  for  shouldFindApplicationForFilter("", new ArrayList<>(0));
+            //  for  shouldFindApplicationForFilter(null, new ArrayList<>(0));
+            //  for  shouldFindApplicationForFilter("", null);
+            when(applicationFormRepository.findAll(REQUEST)).thenReturn(pageApplicationForms);
+        } else if (name != null && !name.isEmpty()) {
+            //  for  shouldFindApplicationForFilter("xxx", new ArrayList<>(0));
+            //  for  shouldFindApplicationForFilter("xxx", null);
+            when(applicationFormRepository.findByName(name, REQUEST)).thenReturn(pageApplicationForms);
+        } else if(forStatus) {
+            //  for  shouldFindApplicationForFilter("", STATUS_COLLECTIONS);
+            //  for  shouldFindApplicationForFilter(null, STATUS_COLLECTIONS);
+            when(applicationFormRepository.findByStatusIn(statusCollection, REQUEST)).thenReturn(pageApplicationForms);
+        } else{
+            when(applicationFormRepository.findAll(REQUEST)).thenReturn(pageApplicationForms);
+        }
+
         when(pageApplicationForms.getTotalElements()).thenReturn(10l);
 
         //WHEN
@@ -235,7 +397,6 @@ public class ApplicationFormServiceTest {
         //THEN
         Assert.assertTrue(totalElements == 10L);
     }
-
 
     /**
      * Dynamic method for success in run service action for changing status
@@ -342,8 +503,16 @@ public class ApplicationFormServiceTest {
         //GIVEN
         when(applicationFormRepository.findById(1)).thenReturn(getApplicationForm(oldStatus));
 
-        thrown.expect(ApplicationFormChangingStatusRuntimeException.class);
-        thrown.expectMessage("Cause is required.");
+        if (ApplicationStatus.CREATED.equals(oldStatus) && Action.REJECT.equals(action)) {
+            thrown.expect(ApplicationFormChangingStatusException.class);
+            thrown.expectMessage("Can not changed status.");
+        } else if (ApplicationStatus.VERIFIED.equals(oldStatus) && Action.DELETE.equals(action)) {
+            thrown.expect(ApplicationFormChangingStatusException.class);
+            thrown.expectMessage("Can not changed status.");
+        } else {
+            thrown.expect(ApplicationFormChangingStatusRuntimeException.class);
+            thrown.expectMessage("Cause is required.");
+        }
 
         //WHEN
         switch (action) {

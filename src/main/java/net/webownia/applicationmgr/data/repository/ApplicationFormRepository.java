@@ -17,6 +17,7 @@ package net.webownia.applicationmgr.data.repository;
 
 import net.webownia.applicationmgr.data.model.ApplicationForm;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -30,7 +31,9 @@ public interface ApplicationFormRepository extends JpaRepository<ApplicationForm
 
     Page<ApplicationForm> findByNameOrStatusIn(String name, Collection<String> statusCollection, Pageable pageable);
 
-    ApplicationForm findById(long id);
+    Page<ApplicationForm> findByName(String name, Pageable pageable);
 
-    Page<ApplicationForm> findAll(Pageable pageable);
+    Page<ApplicationForm> findByStatusIn(Collection<String> statusCollection, Pageable pageable);
+
+    ApplicationForm findById(long id);
 }

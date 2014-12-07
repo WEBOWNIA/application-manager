@@ -30,6 +30,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.EnumSet;
 
 /**
  * Created by Adam Barczewski on 2014-12-04.
@@ -86,16 +87,28 @@ public class ApplicationFormServiceImpl implements ApplicationFormService {
 
     @Override
     public Page<ApplicationForm> findByNameOrStatusIn(String name, Collection<String> collectionStatus, Integer pageNumber) throws ApplicationFormChangingStatusRuntimeException, ApplicationFormChangingStatusException {
-        if (name == null || name.isEmpty() || collectionStatus == null || collectionStatus.isEmpty()) {
-            return findAll(pageNumber);
-        }
         try {
-            ApplicationStatus.enumSetForStatusCollection(collectionStatus);
+            EnumSet applicationStatuses = ApplicationStatus.enumSetForStatusCollection(collectionStatus);
+            boolean forStatus = false;
+            if (applicationStatuses != null && ApplicationStatus.allStatusCollection.containsAll(applicationStatuses)) {
+                forStatus = true;
+            }
             PageRequest request = new PageRequest(pageNumber - 1, PAGE_SIZE, Sort.Direction.ASC, "lastModifiedDate", "createdDate");
-            return repository.findByNameOrStatusIn(name, collectionStatus, request);
+            if (name != null && !name.isEmpty() && forStatus) {
+                return repository.findByNameOrStatusIn(name, collectionStatus, request);
+            } else if ((name == null || name.isEmpty()) && (collectionStatus == null || collectionStatus.isEmpty())) {
+                return findAll(pageNumber);
+            } else if (name != null && !name.isEmpty()) {
+                return repository.findByName(name, request);
+            } else if (forStatus) {
+                return repository.findByStatusIn(collectionStatus, request);
+            } else {
+                return findAll(pageNumber);
+            }
         } catch (IllegalArgumentException e) {
             throw new ApplicationFormChangingStatusRuntimeException("Wrong status collections.", e.getCause());
         } catch (Exception e) {
+            e.printStackTrace();
             throw new ApplicationFormChangingStatusException("Unknown exception", e.getCause());
         }
     }
