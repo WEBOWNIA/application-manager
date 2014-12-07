@@ -63,16 +63,7 @@ public class WebApplicationFormController extends WebMvcConfigurerAdapter {
         }
         Page<ApplicationForm> page = applicationFormService.findByNameOrStatusIn(nameFilter, statusesFilter, 1);
 
-        int current = page.getNumber() + 1;
-        int begin = Math.max(1, current - 5);
-        int end = Math.min(begin + 10, page.getTotalPages());
-
-        model.addAttribute("page", page);
-        model.addAttribute("beginIndex", begin);
-        model.addAttribute("endIndex", end);
-        model.addAttribute("currentIndex", current);
-        model.addAttribute("total", page.getTotalElements());
-        model.addAttribute("statuses", statusesFilter);
+        setModelForIndexPage(model, page);
 
         setAppNameAndVersionOnModel(model);
 
@@ -87,18 +78,11 @@ public class WebApplicationFormController extends WebMvcConfigurerAdapter {
             pageNumber = 1;
         }
 
-        Page<ApplicationForm> page = applicationFormService.findByNameOrStatusIn(filter.getNameFilter(), statusesFilter, pageNumber);
+        nameFilter = filter.getNameFilter();
 
-        int current = page.getNumber() + 1;
-        int begin = Math.max(1, current - 5);
-        int end = Math.min(begin + 10, page.getTotalPages());
+        Page<ApplicationForm> page = applicationFormService.findByNameOrStatusIn(nameFilter, statusesFilter, pageNumber);
 
-        model.addAttribute("page", page);
-        model.addAttribute("beginIndex", begin);
-        model.addAttribute("endIndex", end);
-        model.addAttribute("currentIndex", current);
-        model.addAttribute("total", page.getTotalElements());
-        model.addAttribute("statuses", statusesFilter);
+        setModelForIndexPage(model, page);
 
         setAppNameAndVersionOnModel(model);
 
@@ -130,20 +114,29 @@ public class WebApplicationFormController extends WebMvcConfigurerAdapter {
 
         Page<ApplicationForm> page = applicationFormService.findByNameOrStatusIn(nameFilter, statusesFilter, pageNumber);
 
-        int current = page.getNumber() + 1;
-        int begin = Math.max(1, current - 5);
-        int end = Math.min(begin + 10, page.getTotalPages());
-
-        model.addAttribute("page", page);
-        model.addAttribute("beginIndex", begin);
-        model.addAttribute("endIndex", end);
-        model.addAttribute("currentIndex", current);
-        model.addAttribute("total", page.getTotalElements());
-        model.addAttribute("statuses", statusesFilter);
+        setModelForIndexPage(model, page);
 
         setAppNameAndVersionOnModel(model);
 
         return "index";
+    }
+
+    private void setModelForIndexPage(Model model, Page<ApplicationForm> page) {
+        if (page != null) {
+            int current = page.getNumber() + 1;
+            int begin = Math.max(1, current - 5);
+            int end = Math.min(begin + 10, page.getTotalPages());
+
+            model.addAttribute("page", page);
+            model.addAttribute("beginIndex", begin);
+            model.addAttribute("endIndex", end);
+            model.addAttribute("currentIndex", current);
+            model.addAttribute("total", page.getTotalElements());
+        } else {
+            model.addAttribute("total", 0);
+            model.addAttribute("currentIndex", 1);
+        }
+        model.addAttribute("statuses", statusesFilter);
     }
 
     private void setAppNameAndVersionOnModel(Model model) throws IOException {

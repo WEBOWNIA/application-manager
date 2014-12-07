@@ -88,6 +88,10 @@ public class ApplicationFormServiceImpl implements ApplicationFormService {
 
     @Override
     public Page<ApplicationForm> findByNameOrStatusIn(String name, List<String> collectionStatus, Integer pageNumber) throws ApplicationFormChangingStatusRuntimeException, ApplicationFormChangingStatusException {
+        if ((name == null || name.isEmpty()) && (collectionStatus == null || collectionStatus.isEmpty())) {
+            return null;
+        }
+
         try {
             EnumSet applicationStatuses = ApplicationStatus.enumSetForStatusCollection(collectionStatus);
             boolean forStatus = false;
@@ -97,15 +101,11 @@ public class ApplicationFormServiceImpl implements ApplicationFormService {
             PageRequest request = new PageRequest(pageNumber - 1, PAGE_SIZE, Sort.Direction.ASC, "lastModifiedDate", "createdDate");
             if (name != null && !name.isEmpty() && forStatus) {
                 return repository.findByNameContainingAndStatusIn(name, applicationStatuses, request);
-            } else if ((name == null || name.isEmpty()) && (collectionStatus == null || collectionStatus.isEmpty())) {
-                return findAll(pageNumber);
             } else if (name != null && !name.isEmpty()) {
                 return repository.findByNameContaining(name, request);
             } else if (forStatus) {
                 return repository.findByStatusIn(applicationStatuses, request);
-            } else {
-                return findAll(pageNumber);
-            }
+            } return null;
         } catch (IllegalArgumentException e) {
             throw new ApplicationFormChangingStatusRuntimeException("Wrong status collections.", e.getCause());
         } catch (Exception e) {

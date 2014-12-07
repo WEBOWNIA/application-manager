@@ -11,4 +11,5 @@ Management system for applications.
 * Ajax for actions
 * Favicon
 * i18N
-* validation
+* Validation
+* Member filter name value after submit form

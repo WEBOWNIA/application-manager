@@ -371,31 +371,35 @@ public class ApplicationFormServiceTest {
         if (name != null && !name.isEmpty() && forStatus) {
             //  for  shouldFindApplicationForFilter("xxx", STATUS_COLLECTIONS);
             when(applicationFormRepository.findByNameContainingAndStatusIn(name, applicationStatuses, REQUEST)).thenReturn(pageApplicationForms);
+            check(name, statusCollection, 10);
         } else if ((name == null || name.isEmpty()) && (statusCollection == null || statusCollection.isEmpty())) {
             //  for  shouldFindApplicationForFilter(null, null);
             //  for  shouldFindApplicationForFilter("", new ArrayList<>(0));
             //  for  shouldFindApplicationForFilter(null, new ArrayList<>(0));
             //  for  shouldFindApplicationForFilter("", null);
-            when(applicationFormRepository.findAll(REQUEST)).thenReturn(pageApplicationForms);
+            //WHEN
+            Page<ApplicationForm> page = testee.findByNameOrStatusIn(name, statusCollection, PAGE_NUMBER);
+            //THEN
+            Assert.assertTrue(page == null);
         } else if (name != null && !name.isEmpty()) {
             //  for  shouldFindApplicationForFilter("xxx", new ArrayList<>(0));
             //  for  shouldFindApplicationForFilter("xxx", null);
             when(applicationFormRepository.findByNameContaining(name, REQUEST)).thenReturn(pageApplicationForms);
+            check(name, statusCollection, 10);
         } else if (forStatus) {
             //  for  shouldFindApplicationForFilter("", STATUS_COLLECTIONS);
             //  for  shouldFindApplicationForFilter(null, STATUS_COLLECTIONS);
             when(applicationFormRepository.findByStatusIn(applicationStatuses, REQUEST)).thenReturn(pageApplicationForms);
-        } else {
-            when(applicationFormRepository.findAll(REQUEST)).thenReturn(pageApplicationForms);
+            check(name, statusCollection, 10);
         }
+    }
 
-        when(pageApplicationForms.getTotalElements()).thenReturn(10l);
-
+    private void check(String name, List<String> statusCollection, long total) throws ApplicationFormChangingStatusException {
+        when(pageApplicationForms.getTotalElements()).thenReturn(total);
         //WHEN
         long totalElements = testee.findByNameOrStatusIn(name, statusCollection, PAGE_NUMBER).getTotalElements();
-
         //THEN
-        Assert.assertTrue(totalElements == 10L);
+        Assert.assertTrue(totalElements == total);
     }
 
     /**
