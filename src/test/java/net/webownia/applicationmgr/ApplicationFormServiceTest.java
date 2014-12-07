@@ -39,7 +39,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -371,7 +370,7 @@ public class ApplicationFormServiceTest {
         }
         if (name != null && !name.isEmpty() && forStatus) {
             //  for  shouldFindApplicationForFilter("xxx", STATUS_COLLECTIONS);
-            when(applicationFormRepository.findByNameOrStatusIn(name, applicationStatuses, REQUEST)).thenReturn(pageApplicationForms);
+            when(applicationFormRepository.findByNameContainingAndStatusIn(name, applicationStatuses, REQUEST)).thenReturn(pageApplicationForms);
         } else if ((name == null || name.isEmpty()) && (statusCollection == null || statusCollection.isEmpty())) {
             //  for  shouldFindApplicationForFilter(null, null);
             //  for  shouldFindApplicationForFilter("", new ArrayList<>(0));
@@ -381,12 +380,12 @@ public class ApplicationFormServiceTest {
         } else if (name != null && !name.isEmpty()) {
             //  for  shouldFindApplicationForFilter("xxx", new ArrayList<>(0));
             //  for  shouldFindApplicationForFilter("xxx", null);
-            when(applicationFormRepository.findByName(name, REQUEST)).thenReturn(pageApplicationForms);
-        } else if(forStatus) {
+            when(applicationFormRepository.findByNameContaining(name, REQUEST)).thenReturn(pageApplicationForms);
+        } else if (forStatus) {
             //  for  shouldFindApplicationForFilter("", STATUS_COLLECTIONS);
             //  for  shouldFindApplicationForFilter(null, STATUS_COLLECTIONS);
             when(applicationFormRepository.findByStatusIn(applicationStatuses, REQUEST)).thenReturn(pageApplicationForms);
-        } else{
+        } else {
             when(applicationFormRepository.findAll(REQUEST)).thenReturn(pageApplicationForms);
         }
 

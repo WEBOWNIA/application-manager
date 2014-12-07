@@ -9,3 +9,6 @@ Management system for applications.
  http://www.thymeleaf.org/doc/thymeleafspring.html#model-attributes
 * Error pages
 * Ajax for actions
+* Favicon
+* i18N
+* validation

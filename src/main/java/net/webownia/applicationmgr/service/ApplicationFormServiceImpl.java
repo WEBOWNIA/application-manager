@@ -96,11 +96,11 @@ public class ApplicationFormServiceImpl implements ApplicationFormService {
             }
             PageRequest request = new PageRequest(pageNumber - 1, PAGE_SIZE, Sort.Direction.ASC, "lastModifiedDate", "createdDate");
             if (name != null && !name.isEmpty() && forStatus) {
-                return repository.findByNameOrStatusIn(name, applicationStatuses, request);
+                return repository.findByNameContainingAndStatusIn(name, applicationStatuses, request);
             } else if ((name == null || name.isEmpty()) && (collectionStatus == null || collectionStatus.isEmpty())) {
                 return findAll(pageNumber);
             } else if (name != null && !name.isEmpty()) {
-                return repository.findByName(name, request);
+                return repository.findByNameContaining(name, request);
             } else if (forStatus) {
                 return repository.findByStatusIn(applicationStatuses, request);
             } else {

@@ -29,9 +29,9 @@ import java.util.EnumSet;
  */
 public interface ApplicationFormRepository extends JpaRepository<ApplicationForm, Long> {
 
-    Page<ApplicationForm> findByNameOrStatusIn(String name, EnumSet<ApplicationStatus> statusCollection, Pageable pageable);
+    Page<ApplicationForm> findByNameContainingAndStatusIn(String name, EnumSet<ApplicationStatus> statusCollection, Pageable pageable);
 
-    Page<ApplicationForm> findByName(String name, Pageable pageable);
+    Page<ApplicationForm> findByNameContaining(String name, Pageable pageable);
 
     Page<ApplicationForm> findByStatusIn(EnumSet<ApplicationStatus> statusCollection, Pageable pageable);
 

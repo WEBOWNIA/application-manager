@@ -79,16 +79,45 @@ public class WebApplicationFormController extends WebMvcConfigurerAdapter {
         return "index";
     }
 
+    @RequestMapping(value = "/applications", method = RequestMethod.POST, headers = "Accept=application/json; charset=utf-8")
+    public String applications(@RequestParam(value = "page", required = false) Integer pageNumber,
+                               Filter filter, Model model) throws IOException, ApplicationFormChangingStatusException {
+
+        if (pageNumber == null) {
+            pageNumber = 1;
+        }
+
+        Page<ApplicationForm> page = applicationFormService.findByNameOrStatusIn(filter.getNameFilter(), statusesFilter, pageNumber);
+
+        int current = page.getNumber() + 1;
+        int begin = Math.max(1, current - 5);
+        int end = Math.min(begin + 10, page.getTotalPages());
+
+        model.addAttribute("page", page);
+        model.addAttribute("beginIndex", begin);
+        model.addAttribute("endIndex", end);
+        model.addAttribute("currentIndex", current);
+        model.addAttribute("total", page.getTotalElements());
+        model.addAttribute("statuses", statusesFilter);
+
+        setAppNameAndVersionOnModel(model);
+
+        return "index";
+    }
+
     @RequestMapping(value = "/applications/{status}/{method}", method = RequestMethod.GET, headers = "Accept=application/json; charset=utf-8")
     public String applications(
             @PathVariable String status,
             @PathVariable String method,
-            @RequestParam(value = "pageNumber", required = true) Integer pageNumber,
-            @RequestParam(value = "name", required = false) String nameFilter,
+            @RequestParam(value = "page", required = false) Integer pageNumber,
             Model model) throws Exception {
 
         if (statusesFilter == null) {
             statusesFilter = new ArrayList<>(0);
+        }
+
+        if (pageNumber == null) {
+            pageNumber = 1;
         }
 
         if (!StringUtils.isEmpty(method)) {
