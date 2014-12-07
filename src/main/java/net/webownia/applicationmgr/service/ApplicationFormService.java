@@ -23,6 +23,7 @@ import org.springframework.data.domain.Page;
 
 import javax.transaction.Transactional;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by Adam Barczewski on 2014-12-04.
@@ -46,7 +47,7 @@ public interface ApplicationFormService {
     @Transactional(Transactional.TxType.REQUIRED)
     void publish(long id) throws ApplicationFormChangingStatusRuntimeException, ApplicationFormChangingStatusException;
 
-    Page<ApplicationForm> findByNameOrStatusIn(String name, Collection<String> statusCollection, Integer pageNumber) throws ApplicationFormChangingStatusRuntimeException, ApplicationFormChangingStatusException;
+    Page<ApplicationForm> findByNameOrStatusIn(String name, List<String> statusCollection, Integer pageNumber) throws ApplicationFormChangingStatusRuntimeException, ApplicationFormChangingStatusException;
 
     Page<ApplicationForm> findAll(Integer pageNumber);
 

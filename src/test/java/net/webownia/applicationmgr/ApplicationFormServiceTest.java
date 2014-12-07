@@ -41,6 +41,7 @@ import org.springframework.data.domain.Sort;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumSet;
+import java.util.List;
 
 import static org.mockito.Mockito.*;
 
@@ -52,7 +53,7 @@ public class ApplicationFormServiceTest {
 
     private static final int PAGE_NUMBER = 3;
     private static final PageRequest REQUEST = new PageRequest(PAGE_NUMBER - 1, 10, Sort.Direction.ASC, "lastModifiedDate", "createdDate");
-    private static final Collection<String> STATUS_COLLECTIONS = ApplicationStatus.statusCollectionForEnumSet(ApplicationStatus.allStatusCollection);
+    private static final List<String> STATUS_COLLECTIONS = ApplicationStatus.statusCollectionForEnumSet(ApplicationStatus.allStatusCollection);
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -332,7 +333,7 @@ public class ApplicationFormServiceTest {
     @Test
     public void shouldThrowRuntimeWhenFilteringPageWithWrongStatusCollections() throws ApplicationFormChangingStatusException {
         //GIVEN
-        Collection<String> wrongStatusCollection = new ArrayList<>(1);
+        List<String> wrongStatusCollection = new ArrayList<>(1);
         wrongStatusCollection.add("WRONG_STATUS");
 
         thrown.expect(ApplicationFormChangingStatusRuntimeException.class);
@@ -361,7 +362,7 @@ public class ApplicationFormServiceTest {
      * @param name             - name application form
      * @param statusCollection - Collection<String>
      */
-    private void shouldFindApplicationForFilter(String name, Collection<String> statusCollection) throws ApplicationFormChangingStatusException {
+    private void shouldFindApplicationForFilter(String name, List<String> statusCollection) throws ApplicationFormChangingStatusException {
         //GIVEN
         EnumSet applicationStatuses = ApplicationStatus.enumSetForStatusCollection(statusCollection);
         boolean forStatus = false;
@@ -370,7 +371,7 @@ public class ApplicationFormServiceTest {
         }
         if (name != null && !name.isEmpty() && forStatus) {
             //  for  shouldFindApplicationForFilter("xxx", STATUS_COLLECTIONS);
-            when(applicationFormRepository.findByNameOrStatusIn(name, statusCollection, REQUEST)).thenReturn(pageApplicationForms);
+            when(applicationFormRepository.findByNameOrStatusIn(name, applicationStatuses, REQUEST)).thenReturn(pageApplicationForms);
         } else if ((name == null || name.isEmpty()) && (statusCollection == null || statusCollection.isEmpty())) {
             //  for  shouldFindApplicationForFilter(null, null);
             //  for  shouldFindApplicationForFilter("", new ArrayList<>(0));
@@ -384,7 +385,7 @@ public class ApplicationFormServiceTest {
         } else if(forStatus) {
             //  for  shouldFindApplicationForFilter("", STATUS_COLLECTIONS);
             //  for  shouldFindApplicationForFilter(null, STATUS_COLLECTIONS);
-            when(applicationFormRepository.findByStatusIn(statusCollection, REQUEST)).thenReturn(pageApplicationForms);
+            when(applicationFormRepository.findByStatusIn(applicationStatuses, REQUEST)).thenReturn(pageApplicationForms);
         } else{
             when(applicationFormRepository.findAll(REQUEST)).thenReturn(pageApplicationForms);
         }

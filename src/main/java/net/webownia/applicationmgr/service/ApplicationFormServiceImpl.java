@@ -31,6 +31,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.EnumSet;
+import java.util.List;
 
 /**
  * Created by Adam Barczewski on 2014-12-04.
@@ -86,7 +87,7 @@ public class ApplicationFormServiceImpl implements ApplicationFormService {
     }
 
     @Override
-    public Page<ApplicationForm> findByNameOrStatusIn(String name, Collection<String> collectionStatus, Integer pageNumber) throws ApplicationFormChangingStatusRuntimeException, ApplicationFormChangingStatusException {
+    public Page<ApplicationForm> findByNameOrStatusIn(String name, List<String> collectionStatus, Integer pageNumber) throws ApplicationFormChangingStatusRuntimeException, ApplicationFormChangingStatusException {
         try {
             EnumSet applicationStatuses = ApplicationStatus.enumSetForStatusCollection(collectionStatus);
             boolean forStatus = false;
@@ -95,13 +96,13 @@ public class ApplicationFormServiceImpl implements ApplicationFormService {
             }
             PageRequest request = new PageRequest(pageNumber - 1, PAGE_SIZE, Sort.Direction.ASC, "lastModifiedDate", "createdDate");
             if (name != null && !name.isEmpty() && forStatus) {
-                return repository.findByNameOrStatusIn(name, collectionStatus, request);
+                return repository.findByNameOrStatusIn(name, applicationStatuses, request);
             } else if ((name == null || name.isEmpty()) && (collectionStatus == null || collectionStatus.isEmpty())) {
                 return findAll(pageNumber);
             } else if (name != null && !name.isEmpty()) {
                 return repository.findByName(name, request);
             } else if (forStatus) {
-                return repository.findByStatusIn(collectionStatus, request);
+                return repository.findByStatusIn(applicationStatuses, request);
             } else {
                 return findAll(pageNumber);
             }

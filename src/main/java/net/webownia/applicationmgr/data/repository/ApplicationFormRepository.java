@@ -16,12 +16,12 @@
 package net.webownia.applicationmgr.data.repository;
 
 import net.webownia.applicationmgr.data.model.ApplicationForm;
+import net.webownia.applicationmgr.shared.enums.ApplicationStatus;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Collection;
+import java.util.EnumSet;
 
 /**
  * Repository for ApplicationForm entity
@@ -29,11 +29,11 @@ import java.util.Collection;
  */
 public interface ApplicationFormRepository extends JpaRepository<ApplicationForm, Long> {
 
-    Page<ApplicationForm> findByNameOrStatusIn(String name, Collection<String> statusCollection, Pageable pageable);
+    Page<ApplicationForm> findByNameOrStatusIn(String name, EnumSet<ApplicationStatus> statusCollection, Pageable pageable);
 
     Page<ApplicationForm> findByName(String name, Pageable pageable);
 
-    Page<ApplicationForm> findByStatusIn(Collection<String> statusCollection, Pageable pageable);
+    Page<ApplicationForm> findByStatusIn(EnumSet<ApplicationStatus> statusCollection, Pageable pageable);
 
     ApplicationForm findById(long id);
 }

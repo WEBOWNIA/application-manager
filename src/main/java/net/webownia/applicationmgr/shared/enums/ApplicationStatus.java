@@ -16,7 +16,6 @@
 package net.webownia.applicationmgr.shared.enums;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -34,8 +33,8 @@ public enum ApplicationStatus {
     public static final EnumSet<ApplicationStatus> stagesForRejecting = EnumSet.of(VERIFIED, ACCEPTED);
     public static final EnumSet<ApplicationStatus> allStatusCollection = EnumSet.of(CREATED, DELETED, VERIFIED, REJECTED, ACCEPTED, PUBLISHED);
 
-    public static Collection<String> statusCollectionForEnumSet(EnumSet<ApplicationStatus> enumSet) {
-        Collection<String> statusCollection = new ArrayList<>(0);
+    public static List<String> statusCollectionForEnumSet(EnumSet<ApplicationStatus> enumSet) {
+        List<String> statusCollection = new ArrayList<>(0);
         if (enumSet != null && !enumSet.isEmpty()) {
             for (ApplicationStatus status : enumSet) {
                 statusCollection.add(status.name());
@@ -44,7 +43,7 @@ public enum ApplicationStatus {
         return statusCollection;
     }
 
-    public static EnumSet<ApplicationStatus> enumSetForStatusCollection(Collection<String> statusCollection) {
+    public static EnumSet<ApplicationStatus> enumSetForStatusCollection(List<String> statusCollection) {
         List<ApplicationStatus> enumList = new ArrayList<>(0);
         if (statusCollection != null && !statusCollection.isEmpty()) {
             for (String status : statusCollection) {
