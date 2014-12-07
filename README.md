@@ -5,5 +5,7 @@ v1.0.0-SNAPSHOT
 Management system for applications.
 
 ### Todo list:
-* Converter for org.joda.time.LocalDateTime (pattern="dd.MM.yyyy HH:mm:ss:SSS")
+* Converter for org.joda.time.LocalDateTime (pattern="dd.MM.yyyy HH:mm:ss:SSS") -
+ http://www.thymeleaf.org/doc/thymeleafspring.html#model-attributes
 * Error pages
+* Ajax for actions

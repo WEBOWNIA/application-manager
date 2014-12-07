@@ -23,29 +23,53 @@
                         <input type="text" class="form-control" id="nameFilter" placeholder="Name..."/>
                     </div>
 
-                    <button type="button" class="btn btn-success">
+                    <!-- CREATED -->
+                    <a th:if="${statuses.contains('CREATED')}" href="/" th:href="@{|/applications/CREATED/hide?pageNumber=${currentIndex}|}" class="btn btn-large btn-success">
                         <span class="glyphicon glyphicon-eye-open" aria-hidden="true"/> Created
-                    </button>
+                    </a>
+                    <a th:if="${not statuses.contains('CREATED')}" href="/" th:href="@{|/applications/CREATED/show?pageNumber=${currentIndex}|}" class="btn btn-large btn-default">
+                        <span class="glyphicon glyphicon-eye-close" aria-hidden="true"/> Created
+                    </a>
 
-                    <button type="button" class="btn btn-default">
+                    <!-- VERIFIED -->
+                    <a th:if="${statuses.contains('VERIFIED')}" href="/" th:href="@{|/applications/VERIFIED/hide?pageNumber=${currentIndex}|}" class="btn btn-large btn-success">
+                        <span class="glyphicon glyphicon-eye-open" aria-hidden="true"/> Verified
+                    </a>
+                    <a th:if="${not statuses.contains('VERIFIED')}" href="/" th:href="@{|/applications/VERIFIED/show?pageNumber=${currentIndex}|}" class="btn btn-large btn-default">
                         <span class="glyphicon glyphicon-eye-close" aria-hidden="true"/> Verified
-                    </button>
+                    </a>
 
-                    <button type="button" class="btn btn-default">
+                    <!-- ACCEPTED -->
+                    <a th:if="${statuses.contains('ACCEPTED')}" href="/" th:href="@{|/applications/ACCEPTED/hide?pageNumber=${currentIndex}|}" class="btn btn-large btn-success">
+                        <span class="glyphicon glyphicon-eye-open" aria-hidden="true"/> Accepted
+                    </a>
+                    <a th:if="${not statuses.contains('ACCEPTED')}" href="/" th:href="@{|/applications/ACCEPTED/show?pageNumber=${currentIndex}|}" class="btn btn-large btn-default">
                         <span class="glyphicon glyphicon-eye-close" aria-hidden="true"/> Accepted
-                    </button>
+                    </a>
 
-                    <button type="button" class="btn btn-default">
+                    <!-- PUBLISHED -->
+                    <a th:if="${statuses.contains('PUBLISHED')}" href="/" th:href="@{|/applications/PUBLISHED/hide?pageNumber=${currentIndex}|}" class="btn btn-large btn-success">
+                        <span class="glyphicon glyphicon-eye-open" aria-hidden="true"/> Published
+                    </a>
+                    <a th:if="${not statuses.contains('PUBLISHED')}" href="/" th:href="@{|/applications/PUBLISHED/show?pageNumber=${currentIndex}|}" class="btn btn-large btn-default">
                         <span class="glyphicon glyphicon-eye-close" aria-hidden="true"/> Published
-                    </button>
+                    </a>
 
-                    <button type="button" class="btn btn-default">
+                    <!-- REJECTED -->
+                    <a th:if="${statuses.contains('REJECTED')}" href="/" th:href="@{|/applications/REJECTED/hide?pageNumber=${currentIndex}|}" class="btn btn-large btn-success">
+                        <span class="glyphicon glyphicon-eye-open" aria-hidden="true"/> Rejected
+                    </a>
+                    <a th:if="${not statuses.contains('REJECTED')}" href="/" th:href="@{|/applications/REJECTED/show?pageNumber=${currentIndex}|}" class="btn btn-large btn-default">
                         <span class="glyphicon glyphicon-eye-close" aria-hidden="true"/> Rejected
-                    </button>
+                    </a>
 
-                    <button type="button" class="btn btn-default">
+                    <!-- DELETED -->
+                    <a th:if="${statuses.contains('DELETED')}" href="/" th:href="@{|/applications/DELETED/hide?pageNumber=${currentIndex}|}" class="btn btn-large btn-success">
+                        <span class="glyphicon glyphicon-eye-open" aria-hidden="true"/> Deleted
+                    </a>
+                    <a th:if="${not statuses.contains('DELETED')}" href="/" th:href="@{|/applications/DELETED/show?pageNumber=${currentIndex}|}" class="btn btn-large btn-default">
                         <span class="glyphicon glyphicon-eye-close" aria-hidden="true"/> Deleted
-                    </button>
+                    </a>
                 </div>
             </form>
         </div>
@@ -61,7 +85,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="item : ${page.getContent()}">
+            <tr th:each="item : ${page.content}">
                 <td th:text="${item.name}" style="vertical-align: super"/>
                 <td th:text="${item.content}" style="vertical-align: super"/>
                 <td th:text="${item.createdDate}" style="vertical-align: super"/>

@@ -16,11 +16,14 @@
 package net.webownia.applicationmgr.controller;
 
 import net.webownia.applicationmgr.data.model.ApplicationForm;
+import net.webownia.applicationmgr.exception.ApplicationFormChangingStatusException;
 import net.webownia.applicationmgr.service.ApplicationFormService;
+import net.webownia.applicationmgr.shared.enums.ApplicationStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -29,6 +32,7 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -37,6 +41,9 @@ import java.util.Properties;
  */
 @Controller
 public class WebApplicationFormController extends WebMvcConfigurerAdapter {
+
+    private List<String> statusesFilter;
+    private String nameFilter;
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
@@ -48,9 +55,13 @@ public class WebApplicationFormController extends WebMvcConfigurerAdapter {
 
 
     @RequestMapping(value = "/", method = RequestMethod.GET, headers = "Accept=application/json; charset=utf-8")
-    public String applications(Model model) throws IOException {
+    public String applications(Model model) throws IOException, ApplicationFormChangingStatusException {
 
-        Page<ApplicationForm> page = applicationFormService.findAll(1);
+
+        if (statusesFilter == null) {
+            statusesFilter = ApplicationStatus.statusCollectionForEnumSet(ApplicationStatus.allStatusCollection);
+        }
+        Page<ApplicationForm> page = applicationFormService.findByNameOrStatusIn(nameFilter, statusesFilter, 1);
 
         int current = page.getNumber() + 1;
         int begin = Math.max(1, current - 5);
@@ -61,19 +72,34 @@ public class WebApplicationFormController extends WebMvcConfigurerAdapter {
         model.addAttribute("endIndex", end);
         model.addAttribute("currentIndex", current);
         model.addAttribute("total", page.getTotalElements());
+        model.addAttribute("statuses", statusesFilter);
 
         setAppNameAndVersionOnModel(model);
 
         return "index";
     }
 
-    @RequestMapping(value = "/applications/{pageNumber}", method = RequestMethod.GET, headers = "Accept=application/json; charset=utf-8")
+    @RequestMapping(value = "/applications/{status}/{method}", method = RequestMethod.GET, headers = "Accept=application/json; charset=utf-8")
     public String applications(
-            @RequestParam(value = "name", required = false) String name,
-            @RequestParam(value = "statuses", required = false) List<String> statuses,
-            @PathVariable Integer pageNumber, Model model) throws Exception {
+            @PathVariable String status,
+            @PathVariable String method,
+            @RequestParam(value = "pageNumber", required = true) Integer pageNumber,
+            @RequestParam(value = "name", required = false) String nameFilter,
+            Model model) throws Exception {
 
-        Page<ApplicationForm> page = applicationFormService.findByNameOrStatusIn(name, statuses, pageNumber);
+        if (statusesFilter == null) {
+            statusesFilter = new ArrayList<>(0);
+        }
+
+        if (!StringUtils.isEmpty(method)) {
+            if ("show".equals(method)) {
+                statusesFilter.add(status);
+            } else if ("hide".equals(method)) {
+                statusesFilter.remove(status);
+            }
+        }
+
+        Page<ApplicationForm> page = applicationFormService.findByNameOrStatusIn(nameFilter, statusesFilter, pageNumber);
 
         int current = page.getNumber() + 1;
         int begin = Math.max(1, current - 5);
@@ -84,6 +110,7 @@ public class WebApplicationFormController extends WebMvcConfigurerAdapter {
         model.addAttribute("endIndex", end);
         model.addAttribute("currentIndex", current);
         model.addAttribute("total", page.getTotalElements());
+        model.addAttribute("statuses", statusesFilter);
 
         setAppNameAndVersionOnModel(model);
 
