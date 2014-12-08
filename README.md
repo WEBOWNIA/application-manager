@@ -28,6 +28,6 @@ Or you can build the WAR file with mvn clean package and run the WAR on Apache T
 * Exception handling and presentation on views
 * Notifications
 * Encoding problem (polish -> UTF-8)
-* 
+
 ### Licencing
 Apache License 2.0
