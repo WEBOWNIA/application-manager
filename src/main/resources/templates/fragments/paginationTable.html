@@ -105,7 +105,7 @@
                             <ul class="dropdown-menu" role="menu">
                                 <li><a href="/preview" th:href="@{|/application/${item.id}/preview|}">Preview</a></li>
                                 <li th:if="${item.status.name() == 'VERIFIED' or item.status.name() == 'CREATED'}"><a href="/edit" th:href="@{|/application/${item.id}/edit|}">Edit</a></li>
-                                <li><a href="/history" th:href="@{|/application/${item.id}/history|}">Modifications</a></li>
+                                <li th:if="${item.status.name() != 'CREATED'}"><a href="/history" th:href="@{|/application/${item.id}/history|}">Modifications</a></li>
                                 <li th:if="${item.status.name() == 'CREATED'}"><a href="/deleteOrReject" th:href="@{|/application/${item.id}/delete|}">Delete</a></li>
                                 <li th:if="${item.status.name() == 'CREATED'}"><a href="/" th:href="@{|/application/${item.id}/verify|}">Verify</a></li>
                                 <li th:if="${item.status.name() == 'VERIFIED' or item.status.name() == 'ACCEPTED'}"><a href="/deleteOrReject" th:href="@{|/application/${item.id}/reject|}">Reject</a></li>

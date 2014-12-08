@@ -53,6 +53,7 @@ public class ApplicationFormServiceTest {
     private static final int PAGE_NUMBER = 3;
     private static final PageRequest REQUEST = new PageRequest(PAGE_NUMBER - 1, 10, Sort.Direction.ASC, "lastModifiedDate", "createdDate");
     private static final List<String> STATUS_COLLECTIONS = ApplicationStatus.statusCollectionForEnumSet(ApplicationStatus.allStatusCollection);
+    private boolean updateTest = false;
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -355,6 +356,48 @@ public class ApplicationFormServiceTest {
         Assert.assertTrue(totalElements == 10L);
     }
 
+    @Test
+    public void shouldUpdate() {
+        //GIVEN
+        when(applicationFormRepository.findById(1)).thenReturn(getApplicationForm(ApplicationStatus.CREATED));
+
+        //WHEN
+        testee.update(1l, "new name", "new content");
+
+        //THEN
+        verify(applicationFormRepository, times(1)).findById(1);
+        verify(applicationFormRepository, times(1)).save(Matchers.any(ApplicationForm.class));
+    }
+
+    @Test
+    public void shouldThrowRuntimeWhenUpdateUnValidFieldTestCase() {
+        updateTest = true;
+        shouldThrowRuntimeWithOutNameOrContent(null, null);
+        updateTest = false;
+    }
+
+
+    @Test
+    public void shouldThrowRuntimeWhenUpdateUnValidFieldTestCase1() {
+        updateTest = true;
+        shouldThrowRuntimeWithOutNameOrContent("", "");
+        updateTest = false;
+    }
+
+    @Test
+    public void shouldThrowRuntimeWhenUpdateUnValidFieldTestCase2() {
+        updateTest = true;
+        shouldThrowRuntimeWithOutNameOrContent(null, "");
+        updateTest = false;
+    }
+
+    @Test
+    public void shouldThrowRuntimeWhenUpdateUnValidFieldTestCase3() {
+        updateTest = true;
+        shouldThrowRuntimeWithOutNameOrContent("", null);
+        updateTest = false;
+    }
+
     /**
      * dynamic method for assert find applications for filter
      *
@@ -452,7 +495,7 @@ public class ApplicationFormServiceTest {
         when(applicationFormRepository.findById(1)).thenReturn(getApplicationForm(oldStatus));
 
         thrown.expect(ApplicationFormChangingStatusException.class);
-        thrown.expectMessage("Can not changed status.");
+        thrown.expectMessage("Can not changing status.");
 
         //WHEN
         switch (action) {
@@ -493,7 +536,11 @@ public class ApplicationFormServiceTest {
             thrown.expectMessage("Content is required.");
         }
 
-        testee.create(name, content);
+        if (updateTest) {
+            testee.update(1l, name, content);
+        } else {
+            testee.create(name, content);
+        }
     }
 
     /**
@@ -509,10 +556,10 @@ public class ApplicationFormServiceTest {
 
         if (ApplicationStatus.CREATED.equals(oldStatus) && Action.REJECT.equals(action)) {
             thrown.expect(ApplicationFormChangingStatusException.class);
-            thrown.expectMessage("Can not changed status.");
+            thrown.expectMessage("Can not changing status.");
         } else if (ApplicationStatus.VERIFIED.equals(oldStatus) && Action.DELETE.equals(action)) {
             thrown.expect(ApplicationFormChangingStatusException.class);
-            thrown.expectMessage("Can not changed status.");
+            thrown.expectMessage("Can not changing status.");
         } else {
             thrown.expect(ApplicationFormChangingStatusRuntimeException.class);
             thrown.expectMessage("Cause is required.");

@@ -22,7 +22,6 @@ import net.webownia.applicationmgr.exception.ApplicationFormChangingStatusRuntim
 import org.springframework.data.domain.Page;
 
 import javax.transaction.Transactional;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -30,31 +29,112 @@ import java.util.List;
  */
 public interface ApplicationFormService {
 
+    /**
+     * Service for create new application
+     *
+     * @param name
+     * @param content
+     * @throws ApplicationFormChangingStatusRuntimeException
+     */
     void create(String name, String content) throws ApplicationFormChangingStatusRuntimeException;
 
+    /**
+     * Service for delete
+     *
+     * @param id
+     * @param cause
+     * @throws ApplicationFormChangingStatusRuntimeException
+     * @throws ApplicationFormChangingStatusException
+     */
     @Transactional(Transactional.TxType.REQUIRED)
     void delete(long id, String cause) throws ApplicationFormChangingStatusRuntimeException, ApplicationFormChangingStatusException;
 
+    /**
+     * Service for verify
+     *
+     * @param id
+     * @throws ApplicationFormChangingStatusRuntimeException
+     * @throws ApplicationFormChangingStatusException
+     */
     @Transactional(Transactional.TxType.REQUIRED)
     void verify(long id) throws ApplicationFormChangingStatusRuntimeException, ApplicationFormChangingStatusException;
 
+    /**
+     * Service for reject
+     *
+     * @param id
+     * @param cause
+     * @throws ApplicationFormChangingStatusRuntimeException
+     * @throws ApplicationFormChangingStatusException
+     */
     @Transactional(Transactional.TxType.REQUIRED)
     void reject(long id, String cause) throws ApplicationFormChangingStatusRuntimeException, ApplicationFormChangingStatusException;
 
+    /**
+     * Service for accept
+     *
+     * @param id
+     * @throws ApplicationFormChangingStatusRuntimeException
+     * @throws ApplicationFormChangingStatusException
+     */
     @Transactional(Transactional.TxType.REQUIRED)
     void accept(long id) throws ApplicationFormChangingStatusRuntimeException, ApplicationFormChangingStatusException;
 
+    /**
+     * Service for publish
+     *
+     * @param id
+     * @throws ApplicationFormChangingStatusRuntimeException
+     * @throws ApplicationFormChangingStatusException
+     */
     @Transactional(Transactional.TxType.REQUIRED)
     void publish(long id) throws ApplicationFormChangingStatusRuntimeException, ApplicationFormChangingStatusException;
 
+    /**
+     * Service for find applications by name or status collection
+     *
+     * @param name
+     * @param statusCollection - List<String>
+     * @param pageNumber
+     * @return
+     * @throws ApplicationFormChangingStatusRuntimeException
+     * @throws ApplicationFormChangingStatusException
+     */
     Page<ApplicationForm> findByNameOrStatusIn(String name, List<String> statusCollection, Integer pageNumber) throws ApplicationFormChangingStatusRuntimeException, ApplicationFormChangingStatusException;
 
+    /**
+     * Service for find all applications
+     *
+     * @param pageNumber
+     * @return
+     */
     Page<ApplicationForm> findAll(Integer pageNumber);
 
+    /**
+     * Service for find applications by audit id
+     *
+     * @param applicationFormId
+     * @param pageNumber
+     * @return
+     */
     Page<ApplicationFormAudit> findByApplicationFormId(long applicationFormId, Integer pageNumber);
 
+    /**
+     * Service for find Appication by id
+     *
+     * @param id
+     * @return
+     */
     ApplicationForm findById(Long id);
 
+    /**
+     * Service for update application
+     *
+     * @param id
+     * @param name
+     * @param content
+     * @throws ApplicationFormChangingStatusRuntimeException
+     */
     @Transactional(Transactional.TxType.REQUIRED)
     void update(Long id, String name, String content) throws ApplicationFormChangingStatusRuntimeException;
 }

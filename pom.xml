@@ -5,11 +5,10 @@
 
     <groupId>net.webownia</groupId>
     <artifactId>application-manager</artifactId>
-    <version>1.0.0-Beta</version>
+    <version>1.0.0-Final</version>
     <packaging>war</packaging>
 
     <name>Application Management System</name>
-    <description>Management system in the recruitment process applications for Blue Service</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
