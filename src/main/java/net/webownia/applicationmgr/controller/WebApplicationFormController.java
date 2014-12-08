@@ -146,6 +146,19 @@ public class WebApplicationFormController extends WebMvcConfigurerAdapter {
         return "new";
     }
 
+    @RequestMapping(value = "/application/save", method = RequestMethod.POST, headers = "Accept=application/json; charset=utf-8")
+    public String save(ApplicationForm applicationForm, Model model) throws IOException {
+        applicationFormService.create(applicationForm.getName(), applicationForm.getContent());
+        setAppNameAndVersionOnModel(model);
+        return "redirect:/";
+    }
+
+    @RequestMapping(value = "/application/{id}/update", method = RequestMethod.POST, headers = "Accept=application/json; charset=utf-8")
+    public String update(@PathVariable Long id, ApplicationForm applicationForm) throws IOException, ApplicationFormChangingStatusException {
+        applicationFormService.update(id, applicationForm.getName(), applicationForm.getContent());
+        return "redirect:/";
+    }
+
     @RequestMapping(value = "/application/{id}/{method}", method = RequestMethod.GET, headers = "Accept=application/json; charset=utf-8")
     public String changeStatus(@PathVariable Long id, @PathVariable String method, Model model) throws ApplicationFormChangingStatusException, IOException {
         if ("verify".equals(method) && id != null) {
@@ -183,13 +196,12 @@ public class WebApplicationFormController extends WebMvcConfigurerAdapter {
             model.addAttribute("endIndex", end);
             model.addAttribute("currentIndex", current);
             model.addAttribute("total", page.getTotalElements());
+            model.addAttribute("pageWrapper", new PageWrapper<ApplicationForm>(page, "/applications"));
         } else {
             model.addAttribute("total", 0);
             model.addAttribute("currentIndex", 1);
         }
         model.addAttribute("statuses", statusesFilter);
-
-        model.addAttribute("pageWrapper", new PageWrapper<ApplicationForm>(page, "/applications"));
     }
 
     private void setAppNameAndVersionOnModel(Model model) throws IOException {

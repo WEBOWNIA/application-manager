@@ -130,6 +130,23 @@ public class ApplicationFormServiceImpl implements ApplicationFormService {
         return repository.findById(id);
     }
 
+    @Override
+    public void update(Long id, String name, String content) throws ApplicationFormChangingStatusRuntimeException{
+        if ((content == null || content.isEmpty()) && (name == null || name.isEmpty())) {
+            throw new ApplicationFormChangingStatusRuntimeException("Name and content are required.");
+        } else if (name == null || name.isEmpty()) {
+            throw new ApplicationFormChangingStatusRuntimeException("Name is required.");
+        } else if (content == null || content.isEmpty()) {
+            throw new ApplicationFormChangingStatusRuntimeException("Content is required.");
+        }
+
+        ApplicationForm applicationForm = repository.findById(id);
+        applicationForm.setName(name);
+        applicationForm.setContent(content);
+
+        repository.save(applicationForm);
+    }
+
     private void changeStatusAndAudit(long id, ApplicationStatus status, String cause) throws ApplicationFormChangingStatusRuntimeException, ApplicationFormChangingStatusException {
         ApplicationForm applicationForm = repository.findById(id);
 

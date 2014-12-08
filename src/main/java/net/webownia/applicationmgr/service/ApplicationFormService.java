@@ -54,4 +54,7 @@ public interface ApplicationFormService {
     Page<ApplicationFormAudit> findByApplicationFormId(long applicationFormId, Integer pageNumber);
 
     ApplicationForm findById(Long id);
+
+    @Transactional(Transactional.TxType.REQUIRED)
+    void update(Long id, String name, String content) throws ApplicationFormChangingStatusRuntimeException;
 }

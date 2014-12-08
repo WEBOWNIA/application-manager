@@ -20,7 +20,7 @@
                 <div class="form-group">
                     <div class="input-group">
                         <div class="input-group-addon">By name</div>
-                        <input type="text" class="form-control" id="nameFilter" name="nameFilter" placeholder="Name..." th:value="${nameFilter}"/>
+                        <input type="text" class="form-control" id="nameFilter" name="nameFilter" placeholder="Name..."  th:value="${nameFilter}"/>
                     </div>
 
                     <!-- CREATED -->
@@ -71,7 +71,7 @@
                         <span class="glyphicon glyphicon-eye-close" aria-hidden="true"/> Deleted
                     </a>
 
-                    <a href="/new" th:href="@{|/application/new|}" class="btn btn-large btn-success">
+                    <a href="/new" th:href="@{/application/new}" class="btn btn-large btn-success">
                         <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"/> Add
                     </a>
                 </div>
