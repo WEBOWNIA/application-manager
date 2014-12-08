@@ -1,8 +1,20 @@
 Application Management System
 ===================
-v1.0.0-SNAPSHOT
+v1.0.0-Beta
 
 Management system for applications.
+
+## Environment
+* Maven project
+* JDK 8
+
+## Quick start
+If you are using Maven, you can run the application using mvn spring-boot:run.
+Or you can build the WAR file with mvn clean package and run the WAR on Apache Tomcat server.
+
+
+### Configuration
+* Database configuration in file src\main\resources\application.yml
 
 ### Todo list:
 * Converter for org.joda.time.LocalDateTime (pattern="dd.MM.yyyy HH:mm:ss:SSS") -
