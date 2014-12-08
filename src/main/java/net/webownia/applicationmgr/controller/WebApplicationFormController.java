@@ -66,7 +66,7 @@ public class WebApplicationFormController extends WebMvcConfigurerAdapter {
         }
         Page<ApplicationForm> page = applicationFormService.findByNameOrStatusIn(nameFilter, statusesFilter, 1);
 
-        setModelForIndexPage(model, page);
+        setModelForIndexPage(model, page, "/applications");
 
         setAppNameAndVersionOnModel(model);
 
@@ -85,7 +85,7 @@ public class WebApplicationFormController extends WebMvcConfigurerAdapter {
 
         Page<ApplicationForm> page = applicationFormService.findByNameOrStatusIn(nameFilter, statusesFilter, pageNumber);
 
-        setModelForIndexPage(model, page);
+        setModelForIndexPage(model, page, "/applications");
 
         setAppNameAndVersionOnModel(model);
 
@@ -101,7 +101,7 @@ public class WebApplicationFormController extends WebMvcConfigurerAdapter {
 
         Page<ApplicationForm> page = applicationFormService.findByNameOrStatusIn(nameFilter, statusesFilter, pageNumber);
 
-        setModelForIndexPage(model, page);
+        setModelForIndexPage(model, page, "/applications");
 
         setAppNameAndVersionOnModel(model);
 
@@ -133,7 +133,7 @@ public class WebApplicationFormController extends WebMvcConfigurerAdapter {
 
         Page<ApplicationForm> page = applicationFormService.findByNameOrStatusIn(nameFilter, statusesFilter, pageNumber);
 
-        setModelForIndexPage(model, page);
+        setModelForIndexPage(model, page, "/applications");
 
         setAppNameAndVersionOnModel(model);
 
@@ -154,8 +154,20 @@ public class WebApplicationFormController extends WebMvcConfigurerAdapter {
     }
 
     @RequestMapping(value = "/application/{id}/update", method = RequestMethod.POST, headers = "Accept=application/json; charset=utf-8")
-    public String update(@PathVariable Long id, ApplicationForm applicationForm) throws IOException, ApplicationFormChangingStatusException {
+      public String update(@PathVariable Long id, ApplicationForm applicationForm) throws IOException, ApplicationFormChangingStatusException {
         applicationFormService.update(id, applicationForm.getName(), applicationForm.getContent());
+        return "redirect:/";
+    }
+
+    @RequestMapping(value = "/application/{id}/delete", method = RequestMethod.POST, headers = "Accept=application/json; charset=utf-8")
+     public String delete(@PathVariable Long id, ApplicationForm applicationForm) throws IOException, ApplicationFormChangingStatusException {
+        applicationFormService.delete(id, applicationForm.getCause());
+        return "redirect:/";
+    }
+
+    @RequestMapping(value = "/application/{id}/reject", method = RequestMethod.POST, headers = "Accept=application/json; charset=utf-8")
+    public String reject(@PathVariable Long id, ApplicationForm applicationForm) throws IOException, ApplicationFormChangingStatusException {
+        applicationFormService.reject(id, applicationForm.getCause());
         return "redirect:/";
     }
 
@@ -173,19 +185,26 @@ public class WebApplicationFormController extends WebMvcConfigurerAdapter {
             return toView(id, model, "edit");
         }else if ("history".equals(method) && id != null) {
             return toView(id, model, "history");
-        } else if (("delete".equals(method) || "reject".equals(method)) && id != null) {
+        } else if ("delete".equals(method) && id != null) {
+            model.addAttribute("action", "delete");
+            return toView(id, model, "deleteOrReject");
+        }else if ("reject".equals(method) && id != null) {
+            model.addAttribute("action", "reject");
             return toView(id, model, "deleteOrReject");
         }
         return "redirect:/";
     }
 
     private String toView(Long id, Model model, String viewName) throws IOException {
+        if("history".equals(viewName)){
+            setModelForIndexPage(model, applicationFormService.findByApplicationFormId(id, 1), "/applications/history");
+        }
         model.addAttribute("appForm", applicationFormService.findById(id));
         setAppNameAndVersionOnModel(model);
         return viewName;
     }
 
-    private void setModelForIndexPage(Model model, Page<ApplicationForm> page) {
+    private void setModelForIndexPage(Model model, Page page, String url) {
         if (page != null) {
             int current = page.getNumber() + 1;
             int begin = Math.max(1, current - 5);
@@ -196,7 +215,7 @@ public class WebApplicationFormController extends WebMvcConfigurerAdapter {
             model.addAttribute("endIndex", end);
             model.addAttribute("currentIndex", current);
             model.addAttribute("total", page.getTotalElements());
-            model.addAttribute("pageWrapper", new PageWrapper<ApplicationForm>(page, "/applications"));
+            model.addAttribute("pageWrapper", new PageWrapper(page, url));
         } else {
             model.addAttribute("total", 0);
             model.addAttribute("currentIndex", 1);

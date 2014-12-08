@@ -79,43 +79,43 @@
         </div>
         <table th:if="${total > 0}" class="table table-hover table-bordered">
             <thead>
-            <tr>
-                <th>Name</th>
-                <th>Content</th>
-                <th class="col-md-2">Create date</th>
-                <th class="col-md-2">Last modified date</th>
-                <th class="col-md-1">Status</th>
-                <th class="col-md-1"/>
-            </tr>
+                <tr>
+                    <th class="col-md-1">Name</th>
+                    <th>Content</th>
+                    <th class="col-md-2">Create date</th>
+                    <th class="col-md-2">Last modified date</th>
+                    <th class="col-md-1">Status</th>
+                    <th class="col-md-1"/>
+                </tr>
             </thead>
             <tbody>
-            <tr th:each="item : ${page.content}">
-                <td th:text="${item.name}" style="vertical-align: super"/>
-                <td th:text="${item.content}" style="vertical-align: super"/>
-                <td th:text="${item.createdDate}" style="vertical-align: super"/>
-                <td th:text="${item.lastModifiedDate}" style="vertical-align: super"/>
-                <td th:text="${item.status}" style="vertical-align: super"/>
-                <td style="vertical-align: super">
-                    <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
-                                aria-expanded="false">
-                            Actions
-                            <span class="caret"/>
-                        </button>
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a href="/preview" th:href="@{|/application/${item.id}/preview|}">Preview</a></li>
-                            <li><a href="/edit" th:href="@{|/application/${item.id}/edit|}">Edit</a></li>
-                            <li><a href="/history" th:href="@{|/application/${item.id}/history|}">Modifications</a></li>
-                            <li th:if="${item.status.name() == 'CREATED'}"><a href="/deleteOrReject" th:href="@{|/application/${item.id}/delete|}">Delete</a></li>
-                            <li th:if="${item.status.name() == 'CREATED'}"><a href="/" th:href="@{|/application/${item.id}/verify|}">Verify</a></li>
-                            <li th:if="${item.status.name() == 'VERIFIED' or item.status.name() == 'ACCEPTED'}"><a href="/deleteOrReject" th:href="@{|/application/${item.id}/reject|}">Reject</a></li>
-                            <li th:if="${item.status.name() == 'VERIFIED'}"><a href="/" th:href="@{|/application/${item.id}/accept|}">Accept</a></li>
-                            <li th:if="${item.status.name() == 'ACCEPTED'}"><a href="/" th:href="@{|/application/${item.id}/publish|}">Publish</a></li>
-                        </ul>
-                    </div>
-                </td>
-            </tr>
-            <tr />
+                <tr th:each="item : ${page.content}">
+                    <td th:text="${item.name}" style="vertical-align: super"/>
+                    <td th:text="${item.content}" style="vertical-align: super"/>
+                    <td th:text="${item.createdDate}" style="vertical-align: super"/>
+                    <td th:text="${item.lastModifiedDate}" style="vertical-align: super"/>
+                    <td th:text="${item.status}" style="vertical-align: super"/>
+                    <td style="vertical-align: super">
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                                    aria-expanded="false">
+                                Actions
+                                <span class="caret"/>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="/preview" th:href="@{|/application/${item.id}/preview|}">Preview</a></li>
+                                <li th:if="${item.status.name() == 'VERIFIED' or item.status.name() == 'CREATED'}"><a href="/edit" th:href="@{|/application/${item.id}/edit|}">Edit</a></li>
+                                <li><a href="/history" th:href="@{|/application/${item.id}/history|}">Modifications</a></li>
+                                <li th:if="${item.status.name() == 'CREATED'}"><a href="/deleteOrReject" th:href="@{|/application/${item.id}/delete|}">Delete</a></li>
+                                <li th:if="${item.status.name() == 'CREATED'}"><a href="/" th:href="@{|/application/${item.id}/verify|}">Verify</a></li>
+                                <li th:if="${item.status.name() == 'VERIFIED' or item.status.name() == 'ACCEPTED'}"><a href="/deleteOrReject" th:href="@{|/application/${item.id}/reject|}">Reject</a></li>
+                                <li th:if="${item.status.name() == 'VERIFIED'}"><a href="/" th:href="@{|/application/${item.id}/accept|}">Accept</a></li>
+                                <li th:if="${item.status.name() == 'ACCEPTED'}"><a href="/" th:href="@{|/application/${item.id}/publish|}">Publish</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+                <tr />
             </tbody>
         </table>
         <h4 th:if="${total == 0}" style="margin-left: 1%">No records found.</h4>

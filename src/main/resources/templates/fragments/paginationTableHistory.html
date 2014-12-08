@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<div th:fragment='paginationTable'>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h2>Previous version for</h2>
+            <p>
+                <label>Name: </label>
+                <span th:text="${appForm.name}"/>
+                <p />
+                <label>Created date: </label>
+                <span th:text="${appForm.createdDate}"/>
+            </p>
+        </div>
+        <table th:if="${total > 0}" class="table table-hover table-bordered">
+            <thead>
+                <tr>
+                    <th class="col-md-1">Version</th>
+                    <th class="col-md-1">Name</th>
+                    <th>Content</th>
+                    <th class="col-md-2">Last modified date</th>
+                    <th class="col-md-1">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="item : ${page.content}">
+                    <td th:text="${item.version}" style="vertical-align: super"/>
+                    <td th:text="${item.name}" style="vertical-align: super"/>
+                    <td th:text="${item.content}" style="vertical-align: super"/>
+                    <td th:text="${item.lastModifiedDate}" style="vertical-align: super"/>
+                    <td th:text="${item.status}" style="vertical-align: super"/>
+                </tr>
+                <tr />
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-13">
+        <a href="/" th:href="@{/}" class="btn btn-large btn-primary">Back</a>
+    </div>
+</div>
+</body>
+</html>

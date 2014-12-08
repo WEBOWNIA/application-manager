@@ -15,3 +15,4 @@ Management system for applications.
 * Member filter name value after submit form
 * Exception handling and presentation on views
 * Notifications
+* Encoding problem (polish -> UTF-8)

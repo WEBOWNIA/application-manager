@@ -20,9 +20,11 @@ import org.hibernate.annotations.Type;
 import org.joda.time.LocalDateTime;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.Column;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.MappedSuperclass;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -35,6 +37,7 @@ abstract class AbstractApplicationForm {
     private String name;
 
     @NotNull
+    @Column(length = 500)
     private String content;
 
     @Enumerated(EnumType.STRING)
@@ -59,6 +62,7 @@ abstract class AbstractApplicationForm {
         this.content = content;
         this.status = status;
         this.createdDate = createdDate;
+        this.lastModifiedDate = createdDate;
     }
 
     public String getName() {
